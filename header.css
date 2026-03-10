@@ -95,10 +95,13 @@
 .nav-links {
     display: flex;
     list-style: none;
-    gap: 28px;
+    gap: 24px;
+    /* Reduced from 28px for better fit */
     margin: 0;
     padding: 0;
     align-items: center;
+    flex-wrap: nowrap;
+    /* Prevent wrapping */
 }
 
 .nav-links li {
@@ -110,12 +113,15 @@
     text-decoration: none;
     color: #ffffff;
     font-weight: 500;
-    font-size: 16px;
+    font-size: 15px;
+    /* Slightly reduced for better fit */
     font-family: 'Be Vietnam Pro', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     transition: all 0.3s ease;
     display: block;
     line-height: 1.5;
     padding: 5px 0;
+    white-space: nowrap;
+    /* Prevent text jumping to new lines */
 }
 
 .nav-links a:hover,
@@ -130,14 +136,16 @@
 }
 
 .btn-login {
-    padding: 0.8rem 2rem;
+    padding: 0.6rem 1.5rem;
+    /* Reduced from 0.8rem 2rem */
     background-color: var(--primary-color);
     color: var(--light-color) !important;
     text-decoration: none;
     border-radius: 25px;
     transition: background-color 0.3s ease;
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1rem;
+    /* Reduced from 1.1rem */
+    font-weight: 600;
     border: none;
     cursor: pointer;
     display: inline-flex;
