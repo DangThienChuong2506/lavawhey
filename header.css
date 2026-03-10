@@ -140,7 +140,11 @@
     font-weight: 500;
     border: none;
     cursor: pointer;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .btn-login:hover {
@@ -151,7 +155,8 @@
 
 .cart-container {
     position: relative;
-    margin-left: 1.5rem;
+    margin-left: 1rem;
+    flex-shrink: 0;
 }
 
 .btn-cart {
