@@ -1,0 +1,2817 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
+    <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
+    <title>LavaWhey - Thực phẩm bổ sung chất lượng cao</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>"
+        type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+    <!-- Firebase SDK -->
+    <!-- Firebase App (cho mọi ứng dụng Firebase) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <!-- Firebase Authentication (xác thực người dùng) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <!-- Firebase Realtime Database (cơ sở dữ liệu Firebase) -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <script src="search_new.js"></script>
+    <script src="mobile.js"></script>
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="search.css">
+    <link rel="stylesheet" href="reviews.css">
+    <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF6B00;
+            --secondary-color: #FF8533;
+            --dark-color: #333;
+            --light-color: #fff;
+            --gray-color: #f4f4f4;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark-color);
+            padding-top: 155px !important;
+        }
+
+        /* Offset for fixed header */
+        section[id] {
+            scroll-margin-top: 155px;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            min-height: 700px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            overflow: hidden;
+        }
+
+        .hero-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4));
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 5rem;
+            margin-bottom: 30px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+            font-weight: 800;
+            letter-spacing: 2px;
+        }
+
+        .hero p {
+            font-size: 1.6rem;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+            line-height: 1.6;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 20px 50px;
+            background: linear-gradient(45deg, #FF6B00, #FF8533);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.4rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(255, 107, 0, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-align: center;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(255, 107, 0, 0.5);
+            background: linear-gradient(45deg, #FF8533, #FF6B00);
+        }
+
+        .cta-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 15px rgba(255, 107, 0, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Featured Products (Index Page) */
+        .featured-products {
+            padding: 5rem 5%;
+            background-color: var(--gray-color);
+        }
+
+        .featured-products h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--dark-color);
+        }
+
+        .featured-products .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .featured-products .product-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+
+        .featured-products .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+        }
+
+        .featured-products .product-card img {
+            width: 100%;
+            height: 320px;
+            object-fit: contain;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .featured-products .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .featured-products .product-card h3 {
+            padding: 0 1.5rem 1.5rem;
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            margin: 0;
+            text-align: center;
+            line-height: 1.4;
+            min-height: 3.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .featured-products .product-card .price {
+            color: #FF6B00;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        /* Products Page Specific Styles */
+        .products-section {
+            padding: 6rem 5% 4rem;
+            background-color: var(--gray-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        /* Categories */
+        .categories {
+            width: 200px;
+            background: var(--light-color);
+            padding: 1.2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+
+        .categories h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            margin-bottom: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .categories h2::after {
+            content: '\f107';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .categories h2.active::after {
+            transform: rotate(180deg);
+        }
+
+        .category-list {
+            list-style: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .category-list.show {
+            max-height: 500px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .category-list li {
+            margin-bottom: 0.6rem;
+        }
+
+        .category-list a {
+            color: var(--dark-color);
+            text-decoration: none;
+            font-size: 1rem;
+            transition: color 0.2s;
+            display: block;
+            padding: 0.4rem 0;
+        }
+
+        .category-list a:hover,
+        .category-list a.active {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            flex: 1;
+        }
+
+        .product-category {
+            margin-bottom: 2.5rem;
+        }
+
+        .product-category h2 {
+            color: var(--dark-color);
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .product-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .products-section .product-card {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            padding: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            width: calc(25% - 12px);
+            margin: 0;
+        }
+
+        .products-section .product-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+
+        .products-section .product-card h3 {
+            font-size: 0.95rem;
+            margin: 8px 0;
+            color: #333;
+        }
+
+        .products-section .product-card .description {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 8px;
+            height: 36px;
+            overflow: hidden;
+        }
+
+        .products-section .product-card .price {
+            font-size: 1rem;
+            color: #ff6b6b;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        @media (max-width: 1200px) {
+            .products-section .product-card {
+                width: calc(33.333% - 12px);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .categories {
+                width: 100%;
+                position: static;
+            }
+
+            .products-section .product-card {
+                width: calc(50% - 12px);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .products-section .product-card {
+                width: calc(100% - 12px);
+            }
+        }
+
+        /* Benefits Section */
+        .benefits {
+            padding: 5rem 5%;
+            background-color: var(--light-color);
+        }
+
+        .benefits h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .benefit-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .benefit-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .benefit-card h3 {
+            margin-bottom: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--light-color);
+            padding: 4rem 5% 2rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--light-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero {
+                height: 100vh;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .cta-button {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+        }
+
+        /* News Section */
+        .news-section {
+            padding: 4rem 5%;
+            background-color: var(--light-color);
+        }
+
+        .news-section h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 900px) {
+            .news-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .news-grid.news-slider {
+            min-height: 420px;
+            /* Đảm bảo chiều cao tối thiểu cho grid slider, có thể điều chỉnh nếu cần */
+        }
+
+        .news-card {
+            height: 100%;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            background: var(--gray-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .news-card a {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .news-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .news-card h3 {
+            font-size: 1.3rem;
+            margin: 1rem 1.2rem 0.5rem 1.2rem;
+            color: var(--dark-color);
+            min-height: 48px;
+        }
+
+        .news-card p {
+            margin: 0 1.2rem 1rem 1.2rem;
+            color: #555;
+            min-height: 48px;
+            flex: 1;
+        }
+
+        .read-more {
+            display: inline-block;
+            margin: 0 1.2rem 1.2rem 1.2rem;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            align-self: flex-start;
+            margin-top: auto;
+        }
+
+        .read-more:hover {
+            color: var(--secondary-color);
+        }
+
+        .news-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 24px rgba(255, 107, 0, 0.12);
+        }
+
+        /* Contact Section */
+        .contact-section {
+            padding: 4rem 5%;
+            background-color: var(--gray-color);
+        }
+
+        .contact-section h2 {
+            text-align: center;
+            font-size: 2.2rem;
+            margin-bottom: 2.5rem;
+            color: var(--primary-color);
+        }
+
+        .contact-form {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--light-color);
+            padding: 2rem 2.5rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            background: #fafafa;
+            transition: border 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border: 1.5px solid var(--primary-color);
+            outline: none;
+        }
+
+        .submit-button {
+            display: block;
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--primary-color);
+            color: var(--light-color);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .submit-button:hover {
+            background: var(--secondary-color);
+        }
+
+        .contact-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .contact-info {
+            flex: 1;
+            min-width: 300px;
+            background: var(--light-color);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .contact-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .contact-info p {
+            margin-bottom: 0.8rem;
+            color: var(--dark-color);
+        }
+
+        .contact-info i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .contact-info .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .contact-info .social-links a {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info .social-links a:hover {
+            color: var(--primary-color);
+        }
+
+        /* Styled contact links */
+        .contact-link {
+            color: inherit;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .contact-link:hover {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .footer-section p a.contact-link {
+            color: var(--light-color);
+        }
+
+        .footer-section p a.contact-link:hover {
+            color: var(--primary-color);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .newsletter-form button {
+            padding: 0.8rem 1.5rem;
+            background: var(--primary-color);
+            color: var(--light-color);
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .newsletter-form button:hover {
+            background: var(--secondary-color);
+        }
+
+
+        /* Individual Buy Buttons */
+        .buy-button {
+            background-color: #FF6B00;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 500;
+        }
+
+        .buy-button:hover {
+            background-color: #FF8533;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 107, 0, 0.2);
+        }
+
+        /* Whey Protein Buttons */
+        .whey-gold {
+            background-color: #FF6B00;
+        }
+
+        .whey-isolate {
+            background-color: #FF6B00;
+        }
+
+        .whey-hydro {
+            background-color: #FF6B00;
+        }
+
+        .whey-blend {
+            background-color: #FF6B00;
+        }
+
+        /* BCAA Buttons */
+        .bcaa-211 {
+            background-color: #FF6B00;
+        }
+
+        .bcaa-411 {
+            background-color: #FF6B00;
+        }
+
+        .bcaa-811 {
+            background-color: #FF6B00;
+        }
+
+        .bcaa-energy {
+            background-color: #FF6B00;
+        }
+
+        /* Pre-workout Buttons */
+        .pre-explosion {
+            background-color: #FF6B00;
+        }
+
+        .pre-pump {
+            background-color: #FF6B00;
+        }
+
+        .pre-focus {
+            background-color: #FF6B00;
+        }
+
+        .pre-endurance {
+            background-color: #FF6B00;
+        }
+
+        /* Vitamin Buttons */
+        .vitamin-d3 {
+            background-color: #FF6B00;
+        }
+
+        .omega-3 {
+            background-color: #FF6B00;
+        }
+
+        .vitamin-c {
+            background-color: #FF6B00;
+        }
+
+        .magnesium {
+            background-color: #FF6B00;
+        }
+
+        /* Weight Loss Buttons */
+        .l-carnitine {
+            background-color: #FF6B00;
+        }
+
+        .cla {
+            background-color: #FF6B00;
+        }
+
+        .green-tea {
+            background-color: #FF6B00;
+        }
+
+        .fat-burner {
+            background-color: #FF6B00;
+        }
+
+        /* Featured Products Button */
+        .featured-products .buy-button {
+            background-color: #FF6B00;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+        }
+
+        .featured-products .buy-button:hover {
+            background-color: #FF8533;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(255, 107, 0, 0.3);
+        }
+
+        /* Individual Featured Product Buttons */
+        .featured-whey-gold,
+        .featured-bcaa,
+        .featured-pre,
+        .featured-vitamin,
+        .featured-carnitine,
+        .featured-whey-iso {
+            background-color: #FF6B00;
+        }
+
+        /* Featured Products Card Adjustments */
+        .featured-products .product-card {
+            padding-bottom: 20px;
+        }
+
+        .featured-products .product-card img {
+            height: 250px;
+            margin-bottom: 15px;
+        }
+
+        .featured-products .product-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .featured-products .product-card .price {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            color: #FF6B00;
+            font-weight: bold;
+        }
+
+        /* Sale Banner Section */
+        .sale-banner {
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            margin: 40px 0;
+        }
+
+        .sale-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .sale-banner h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .sale-banner p {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+
+        .countdown-item span:first-child {
+            font-size: 2em;
+            font-weight: bold;
+            display: block;
+        }
+
+        .countdown-item span:last-child {
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        /* Discounted Products Section */
+        .discounted-products {
+            padding: 40px 5%;
+            background: var(--gray-color);
+        }
+
+        .discounted-products h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: var(--dark-color);
+        }
+
+        .discounted-products .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .discounted-products .product-card {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 20px;
+        }
+
+        .discounted-products .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .discounted-products .product-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: contain;
+            background-color: #f8f8f8;
+            padding: 20px;
+            transition: transform 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .discounted-products .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .discounted-products .product-card h3 {
+            padding: 0 1.5rem;
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .discounted-products .product-card .original-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 1rem;
+            margin: 5px 1.5rem;
+        }
+
+        .discounted-products .product-card .price {
+            color: #ff4e50;
+            font-weight: bold;
+            font-size: 1.3rem;
+            margin: 5px 1.5rem 15px;
+        }
+
+        .discounted-products .product-card .buy-button {
+            margin: 0 1.5rem;
+            padding: 12px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .discounted-products .product-card .buy-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(255, 107, 0, 0.2);
+        }
+
+        .discounted-products .sale-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff4e50;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 1rem;
+            box-shadow: 0 2px 5px rgba(255, 78, 80, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .discounted-products .product-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+
+            .discounted-products .product-card img {
+                height: 200px;
+            }
+
+            .discounted-products .product-card h3 {
+                font-size: 1.1rem;
+            }
+
+            .discounted-products .product-card .price {
+                font-size: 1.2rem;
+            }
+
+            .discounted-products .product-card .buy-button {
+                font-size: 1rem;
+                padding: 10px 15px;
+            }
+        }
+
+        /* Brands Section */
+        .brands-section {
+            padding: 60px 5%;
+            background: linear-gradient(135deg, #f6f8fa 0%, #e9ecef 100%);
+        }
+
+        .brands-section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .brands-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--primary-color);
+        }
+
+        .brands-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .brand-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .brand-item {
+            flex: 1;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .brand-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .brand-item:hover::before {
+            width: 100%;
+            opacity: 0.1;
+        }
+
+        .brand-logo {
+            flex-shrink: 0;
+            width: 120px;
+            height: 120px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+
+        .brand-item:hover .brand-logo {
+            transform: scale(1.1);
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .brand-info {
+            flex: 1;
+        }
+
+        .brand-info h3 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .brand-info p {
+            color: #666;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 992px) {
+            .brand-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .brand-item {
+                padding: 20px;
+            }
+
+            .brand-logo {
+                width: 100px;
+                height: 100px;
+            }
+
+            .brand-info h3 {
+                font-size: 1.3rem;
+            }
+
+            .brand-info p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .brands-section {
+                padding: 40px 5%;
+            }
+
+            .brands-section h2 {
+                font-size: 2rem;
+            }
+
+            .brand-item {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .brand-logo {
+                margin: 0 auto;
+            }
+        }
+
+        /* Voucher Section */
+        .voucher-section {
+            padding: 60px 5%;
+            background: linear-gradient(135deg, #fff5f5 0%, #fff0f6 100%);
+        }
+
+        .voucher-section h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .voucher-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--primary-color);
+        }
+
+        .voucher-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .voucher-card {
+            display: flex;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .voucher-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .voucher-left {
+            background: linear-gradient(135deg, #ff4e50 0%, #f9d423 100%);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-width: 200px;
+            color: white;
+        }
+
+        .discount {
+            font-size: 3rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .discount-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        .voucher-right {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .voucher-right h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .voucher-right p {
+            color: #666;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .voucher-info {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .voucher-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .voucher-info i {
+            color: var(--primary-color);
+        }
+
+        .copy-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            align-self: flex-start;
+        }
+
+        .copy-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .voucher-card {
+                flex-direction: column;
+            }
+
+            .voucher-left {
+                min-width: 100%;
+                padding: 20px;
+            }
+
+            .voucher-right {
+                padding: 20px;
+            }
+
+            .voucher-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .copy-button {
+                width: 100%;
+            }
+        }
+
+        /* SweetAlert2 Custom Styles */
+        .swal2-container {
+            z-index: 9999 !important;
+        }
+
+        .swal2-popup {
+            z-index: 10000 !important;
+        }
+
+        .swal2-backdrop-show {
+            z-index: 9998 !important;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            opacity: 1;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: var(--light-color);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 15px;
+            top: 12px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.3s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            text-align: center;
+        }
+
+        .modal-header h2 {
+            color: var(--dark-color);
+            font-size: 1.5rem;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-body .form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-body .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 0.9rem;
+        }
+
+        .modal-body .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .modal-body .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .modal-footer {
+            padding: 12px 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .modal-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .modal-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 12px 0;
+            font-size: 0.85rem;
+        }
+
+        .form-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #666;
+        }
+
+        .form-options a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .form-options a:hover {
+            text-decoration: underline;
+        }
+
+        .social-login {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .social-login p {
+            color: #666;
+            margin-bottom: 12px;
+            position: relative;
+            font-size: 0.9rem;
+        }
+
+        .social-login p::before,
+        .social-login p::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 25%;
+            height: 1px;
+            background-color: #ddd;
+        }
+
+        .social-login p::before {
+            left: 0;
+        }
+
+        .social-login p::after {
+            right: 0;
+        }
+
+        .google-login {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: white;
+            color: #333;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .google-login:hover {
+            background-color: #f8f8f8;
+            border-color: #ccc;
+        }
+
+        .google-login img {
+            width: 18px;
+            height: 18px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background: var(--secondary-color);
+        }
+
+        @media (max-width: 576px) {
+            .modal-content {
+                width: 95%;
+                margin: 10px;
+            }
+
+            .form-options {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            .modal-header h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        .cart-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            animation: slideIn 0.3s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .product-buttons {
+            display: flex;
+            gap: 10px;
+            padding: 0 1.5rem;
+        }
+
+        .btn-add-cart {
+            flex: 1;
+            padding: 10px;
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-add-cart:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-buy-now {
+            flex: 1;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-buy-now:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .news-pagination .news-page-btn {
+            background: #fff;
+            border: 2px solid #FF6B00;
+            color: #FF6B00;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .news-pagination .news-page-btn.active {
+            background: #FF6B00;
+            color: #fff;
+        }
+
+        .news-next-btn:hover {
+            background: #FF8533 !important;
+        }
+
+        @media (max-width: 900px) {
+            .news-next-btn {
+                right: -20px !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .news-next-btn {
+                right: 0 !important;
+                top: 100%;
+                transform: translateY(0);
+                margin-top: 10px;
+            }
+
+            .news-pagination {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+
+    <!-- Top Rated & Best Sellers CSS -->
+    <style>
+        /* ==================== TOP RATED SECTION ==================== */
+
+        .top-rated-section {
+            padding: 5rem 5%;
+            background-color: var(--gray-color);
+        }
+
+        .top-rated-section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--dark-color);
+        }
+
+        .top-rated-header {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .top-rated-header h2 {
+            margin: 0;
+        }
+
+        .top-rated-nav {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .top-rated-nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 107, 0, 0.35);
+            background: #fff;
+            color: #FF6B00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .top-rated-nav-btn:hover:not(:disabled) {
+            background: rgba(255, 107, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .top-rated-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .top-rated-slider-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+            padding: 0 6px;
+        }
+
+        /* Track */
+        #topRatedGrid {
+            display: flex;
+            gap: 28px;
+            transition: transform 0.5s cubic-bezier(.77, 0, .18, 1);
+            will-change: transform;
+            padding: 6px 0 14px;
+        }
+
+        /* Card (rendered by reviews.js) */
+        .top-rated-card {
+            flex: 0 0 calc((100% - 56px) / 3);
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .top-rated-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+        }
+
+        .top-rated-card .card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8533 100%);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 2;
+        }
+
+        .top-rated-card .card-img {
+            width: 100%;
+            height: 320px;
+            object-fit: contain;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            margin-bottom: 12px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
+        }
+
+        .top-rated-card:hover .card-img {
+            transform: scale(1.05);
+        }
+
+        .top-rated-card .card-body {
+            padding: 0 1.5rem 1.25rem;
+            text-align: center;
+        }
+
+        .top-rated-card .card-name {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            font-weight: 700;
+            line-height: 1.4;
+            min-height: 3.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+
+        .top-rated-card .card-rating {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        .top-rated-card .card-rating .stars i {
+            color: #FFB300;
+        }
+
+        .top-rated-card .card-price {
+            color: #FF6B00;
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        .top-rated-card .card-category {
+            margin-top: 6px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .top-rated-section .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .top-rated-section .product-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+
+        .top-rated-section .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+        }
+
+        .top-rated-section .product-card img {
+            width: 100%;
+            height: 320px;
+            object-fit: contain;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-rated-section .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .top-rated-section .product-card h3 {
+            padding: 0 1.5rem 1.5rem;
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            margin: 0;
+            text-align: center;
+            line-height: 1.4;
+            min-height: 3.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .top-rated-section .product-card .price {
+            color: #FF6B00;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .best-seller-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .best-seller-badge {
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8533 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .best-seller-badge i {
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            .top-rated-section {
+                padding: 30px 4%;
+            }
+
+            .top-rated-header {
+                margin-bottom: 20px;
+            }
+
+            .top-rated-nav {
+                right: 0;
+            }
+
+            .top-rated-card {
+                flex-basis: calc((100% - 28px) / 2);
+            }
+
+            .top-rated-card .card-img {
+                height: 220px;
+                padding: 16px;
+            }
+
+            .top-rated-card .card-name {
+                font-size: 1rem;
+                min-height: 2.8rem;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .top-rated-nav {
+                position: static;
+                transform: none;
+            }
+
+            .top-rated-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .top-rated-card {
+                flex-basis: 100%;
+            }
+
+            .top-rated-card .card-img {
+                height: 200px;
+            }
+        }
+    </style>
+
+    <script src="js/auth-global.js"></script>
+    <script src="js/marquee.js" charset="UTF-8"></script>
+    <link rel="stylesheet" href="modals.css">
+    <link rel="stylesheet" href="header.css">
+    <style>
+        /* Modern Tools Styling */
+        .tools-section {
+            padding: 4rem 5% 6rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: calc(100vh - 155px);
+        }
+
+        .tools-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3.5rem;
+        }
+
+        .tools-header h1 {
+            font-size: 3rem;
+            color: var(--dark-color);
+            margin-bottom: 1.2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #333, #FF6B00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+
+        .tools-header p {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .tools-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .tabs-header {
+            display: flex;
+            background: #f1f3f5;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            background: transparent;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .tab-btn i {
+            font-size: 1.2rem;
+        }
+
+        .tab-btn.active {
+            background: #fff;
+            color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        @media (max-width: 850px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        .calc-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: #444;
+            font-size: 0.95rem;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 14px 18px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            color: #333;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.1);
+        }
+
+        .gender-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .gender-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .gender-option input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .gender-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            background: #f8f9fa;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .gender-option input:checked+.gender-label {
+            border-color: var(--primary-color);
+            background: rgba(255, 107, 0, 0.05);
+            color: var(--primary-color);
+        }
+
+        .calc-btn {
+            background: linear-gradient(45deg, #FF6B00, #FF8533);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.2);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 107, 0, 0.3);
+            background: linear-gradient(45deg, #FF8533, #FF6B00);
+        }
+
+        .result-container {
+            background: #f8f9fa;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 2px dashed #eee;
+            transition: all 0.5s ease;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .result-container.active {
+            background: #fff;
+            border: 2px solid var(--primary-color);
+            border-style: solid;
+            box-shadow: 0 10px 30px rgba(255, 107, 0, 0.1);
+        }
+
+        .result-label {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            line-height: 1;
+            margin: 10px 0;
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+
+        .result-status {
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            background: #eee;
+            color: #666;
+        }
+
+        .status-underweight {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-normal {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-overweight {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status-obese {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .bmi-scale {
+            display: flex;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .scale-part {
+            flex: 1;
+            height: 100%;
+        }
+
+        .scale-1 {
+            background: #1976d2;
+        }
+
+        /* Thiếu cân */
+        .scale-2 {
+            background: #2e7d32;
+        }
+
+        /* Bình thường */
+        .scale-3 {
+            background: #ef6c00;
+        }
+
+        /* Thừa cân */
+        .scale-4 {
+            background: #c62828;
+        }
+
+        /* Béo phì */
+
+        .tdee-info {
+            width: 100%;
+            margin-top: 20px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tdee-info h4 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .tdee-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .tdee-row:hover {
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transform: scale(1.02);
+        }
+
+        .tdee-row span:first-child {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .tdee-row span:last-child {
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .tdee-row.highlight {
+            background: rgba(255, 107, 0, 0.05);
+            border: 1px solid rgba(255, 107, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+    <!-- Header -->
+    <!-- Top Banner Marquee -->
+    <div class="top-banner-marquee">
+        <div class="marquee-inner">
+            <div class="marquee-content">
+                <span>• Cam kết chuẩn 100% chính hãng</span>
+                <span>• Đổi trả miễn phí 15 ngày</span>
+                <span>• Giao siêu tốc nội thành Cần Thơ trong 1-4h</span>
+                <span>• Tổng hợp Supplement uy tín hàng đầu hiện nay</span>
+                <span>• FREESHIP toàn quốc cho đơn hàng từ 1.000.000 Đ</span>
+                <span>• Cam kết chuẩn 100% chính hãng</span>
+                <span>• Đổi trả miễn phí 15 ngày</span>
+                <span>• Giao siêu tốc nội thành Cần Thơ trong 1-4h</span>
+                <span>• Tổng hợp Supplement uy tín hàng đầu hiện nay</span>
+                <span>• FREESHIP toàn quốc cho đơn hàng từ 1.000.000 Đ</span>
+            </div>
+        </div>
+    </div>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo.png.png" alt="LavaWhey Logo">
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Trang chủ</a></li>
+                <li><a href="member.html">Thành viên</a></li>
+                <li><a href="products.html">Sản phẩm</a></li>
+                <li><a href="news.html">Tin tức</a></li>
+                <li><a href="about.html">Giới thiệu</a></li>
+                <li><a href="contact.html">Liên hệ</a></li>
+                <li><a href="policy.html">Chính sách</a></li>
+                <li><a href="tools.html" class="active">Công cụ</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm..." class="search-input">
+                <div id="search-results"></div>
+                <button class="search-button"><i class="fas fa-search"></i></button>
+                <div class="cart-container">
+                    <div class="btn-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </div>
+                    <div class="cart-dropdown">
+                        <div class="cart-header">
+                            <h3>
+                                <i class="fas fa-shopping-cart"></i>
+                                Giỏ hàng
+                                <span class="cart-count-badge">0 sản phẩm</span>
+                            </h3>
+                        </div>
+                        <div class="cart-items">
+                            <!-- Cart items will be dynamically added here -->
+                        </div>
+                        <div class="cart-summary">
+                            <div class="cart-summary-row">
+                                <span>Tạm tính:</span>
+                                <span>0₫</span>
+                            </div>
+                            <div class="cart-summary-row">
+                                <span>Phí vận chuyển:</span>
+                                <span>0₫</span>
+                            </div>
+                            <div class="cart-summary-row total">
+                                <span>Tổng cộng:</span>
+                                <span>0₫</span>
+                            </div>
+                        </div>
+                        <div class="cart-buttons">
+                            <button class="btn-continue">Tiếp tục mua</button>
+                            <button class="btn-checkout">Thanh toán</button>
+                        </div>
+                        <div class="empty-cart" style="display: none;">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Giỏ hàng của bạn đang trống</p>
+                            <a href="products.html" class="btn-shop">Mua sắm ngay</a>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="btn-login">Đăng nhập</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="tools-section">
+        <div class="tools-header">
+            <h1>Công cụ hỗ trợ mục tiêu của bạn</h1>
+            <p>Tính toán các chỉ số cơ bản để tối ưu hóa quá trình luyện tập và dinh dưỡng.</p>
+        </div>
+
+        <div class="tools-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="bmi">
+                    <i class="fas fa-weight"></i> Tính BMI
+                </button>
+                <button class="tab-btn" data-tab="tdee">
+                    <i class="fas fa-fire"></i> Tính TDEE
+                </button>
+            </div>
+
+            <!-- BMI Tab -->
+            <div id="bmi" class="tab-content active">
+                <div class="calculator-grid">
+                    <div class="calc-inputs">
+                        <div class="input-group">
+                            <label><i class="fas fa-arrows-alt-v"></i> Chiều cao (cm)</label>
+                            <input type="number" id="bmi-height" placeholder="Ví dụ: 175" min="50" max="250">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-weight-hanging"></i> Cân nặng (kg)</label>
+                            <input type="number" id="bmi-weight" placeholder="Ví dụ: 70" min="20" max="300">
+                        </div>
+                        <button class="calc-btn" onclick="calculateBMI()">
+                            <i class="fas fa-calculator"></i> Tính BMI ngay
+                        </button>
+                    </div>
+                    <div class="result-container" id="bmi-result-card">
+                        <span class="result-label">Chỉ số BMI của bạn</span>
+                        <div class="result-value" id="bmi-value">--.-</div>
+                        <div id="bmi-status" class="result-status">Chưa có kết quả</div>
+
+                        <div class="bmi-scale">
+                            <div class="scale-part scale-1" title="Thiếu cân (< 18.5)"></div>
+                            <div class="scale-part scale-2" title="Bình thường (18.5 - 24.9)"></div>
+                            <div class="scale-part scale-3" title="Thừa cân (25 - 29.9)"></div>
+                            <div class="scale-part scale-4" title="Béo phì (>= 30)"></div>
+                        </div>
+
+                        <p style="margin-top: 5px; font-size: 0.9rem; color: #888; text-align: left;">
+                            <i class="fas fa-info-circle"></i> <strong>BMI (Body Mass Index)</strong> là chỉ số khối cơ
+                            thể giúp xác định mức cân nặng so với chiều cao.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TDEE Tab -->
+            <div id="tdee" class="tab-content">
+                <div class="calculator-grid">
+                    <div class="calc-inputs">
+                        <div class="gender-group">
+                            <div class="gender-option">
+                                <input type="radio" name="gender" id="male" value="male" checked>
+                                <label for="male" class="gender-label">
+                                    <i class="fas fa-mars" style="margin-right: 8px;"></i> Nam
+                                </label>
+                            </div>
+                            <div class="gender-option">
+                                <input type="radio" name="gender" id="female" value="female">
+                                <label for="female" class="gender-label">
+                                    <i class="fas fa-venus" style="margin-right: 8px;"></i> Nữ
+                                </label>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-user-clock"></i> Tuổi</label>
+                            <input type="number" id="tdee-age" placeholder="Ví dụ: 25" min="10" max="100">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-arrows-alt-v"></i> Chiều cao (cm)</label>
+                            <input type="number" id="tdee-height" placeholder="Ví dụ: 175" min="50" max="250">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-weight-hanging"></i> Cân nặng (kg)</label>
+                            <input type="number" id="tdee-weight" placeholder="Ví dụ: 70" min="20" max="300">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-running"></i> Mức độ hoạt động</label>
+                            <select id="activity">
+                                <option value="1.2">Ít vận động (Văn phòng, không tập thể dục)</option>
+                                <option value="1.375">Vận động nhẹ (Tập nhẹ 1-3 buổi/tuần)</option>
+                                <option value="1.55">Vận động vừa (Tập trung bình 3-5 buổi/tuần)</option>
+                                <option value="1.725">Vận động mạnh (Tập nặng 6-7 buổi/tuần)</option>
+                                <option value="1.9">Vận động cực mạnh (VĐV, lao động nặng)</option>
+                            </select>
+                        </div>
+                        <button class="calc-btn" onclick="calculateTDEE()">
+                            <i class="fas fa-bolt"></i> Tính TDEE ngay
+                        </button>
+                    </div>
+                    <div class="result-container" id="tdee-result-card">
+                        <span class="result-label">Năng lượng tiêu thụ hàng ngày</span>
+                        <div class="result-value" id="tdee-value">----</div>
+                        <span class="result-label" style="margin-top: -10px;">Calories / ngày</span>
+
+                        <div class="tdee-info" id="tdee-breakdown" style="display: none;">
+                            <h4><i class="fas fa-bullseye"></i> Gợi ý theo mục tiêu:</h4>
+                            <div class="tdee-row">
+                                <span><i class="fas fa-arrow-down"></i> Giảm cân:</span>
+                                <span id="tdee-lose">---- kcal</span>
+                            </div>
+                            <div class="tdee-row highlight">
+                                <span><i class="fas fa-equals"></i> Duy trì:</span>
+                                <span id="tdee-maintain">---- kcal</span>
+                            </div>
+                            <div class="tdee-row">
+                                <span><i class="fas fa-arrow-up"></i> Tăng cân:</span>
+                                <span id="tdee-gain">---- kcal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Giới thiệu chung</h3>
+                <p><a href="about.html" style="text-decoration:none; color:inherit; cursor:pointer;">Giới thiệu về
+                        LavaWhey</a></p>
+                <p><a href="about.html#featured-brands"
+                        style="text-decoration:none; color:inherit; cursor:pointer;">Thương hiệu nổi bật</a></p>
+                <p><a href="about.html#contact-complaints"
+                        style="text-decoration:none; color:inherit; cursor:pointer;">Liên hệ & khiếu nại</a></p>
+                <p><a href="about.html#transaction-terms"
+                        style="text-decoration:none; color:inherit; cursor:pointer;">Điều khoản giao dịch</a></p>
+            </div>
+            <div class="footer-section">
+                <h3>Chính sách chung</h3>
+                <p>Chính sách dữ liệu</p>
+                <p>Chính sách bảo mật</p>
+                <p>Chính sách kinh doanh</p>
+                <p>Chính sách vận chuyển</p>
+                <p>Chính sách bảo hành</p>
+                <p>Chính sách đổi trả</p>
+            </div>
+            <div class="footer-section">
+                <h3>Hỗ trợ khách hàng</h3>
+                <p>Facebook: LavaWhey</p>
+                <p>Instagram: @LavaWhey</p>
+                <p><i class="fas fa-headset"></i> Hotline: 0847 788 360</p>
+                <p><i class="fas fa-envelope"></i> Email: LavaWhey@gmail.com</p>
+                <p><i class="fas fa-question-circle"></i> Hẻm 112/12, Đường 3/2, Hưng Lợi, Ninh Kiều, TP.Cần Thơ</p>
+            </div>
+            <div class="footer-section">
+                <h3>Đăng ký bản tin</h3>
+                <p>Nhận thông tin mới nhất về sản phẩm và khuyến mãi</p>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Email của bạn" required>
+                    <button type="submit">Đăng ký</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 LavaWhey. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching logic
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+                btn.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // BMI Calculation
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('bmi-height').value) / 100;
+            const weight = parseFloat(document.getElementById('bmi-weight').value);
+
+            if (!height || !weight) {
+                Swal.fire('Lỗi', 'Vui lòng nhập đầy đủ chiều cao và cân nặng', 'error');
+                return;
+            }
+
+            const bmi = (weight / (height * height)).toFixed(1);
+            document.getElementById('bmi-value').textContent = bmi;
+
+            let status = '';
+            let statusClass = '';
+
+            if (bmi < 18.5) {
+                status = 'Thiếu cân';
+                statusClass = 'status-underweight';
+            } else if (bmi >= 18.5 && bmi <= 24.9) {
+                status = 'Bình thường';
+                statusClass = 'status-normal';
+            } else if (bmi >= 25 && bmi <= 29.9) {
+                status = 'Thừa cân';
+                statusClass = 'status-overweight';
+            } else {
+                status = 'Béo phì';
+                statusClass = 'status-obese';
+            }
+
+            const statusEl = document.getElementById('bmi-status');
+            statusEl.textContent = status;
+            statusEl.className = 'result-status ' + statusClass;
+
+            const resultCard = document.getElementById('bmi-result-card');
+            resultCard.classList.add('active');
+
+            // Scroll to result on mobile
+            if (window.innerWidth < 850) {
+                resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // TDEE Calculation
+        function calculateTDEE() {
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const age = parseInt(document.getElementById('tdee-age').value);
+            const height = parseFloat(document.getElementById('tdee-height').value);
+            const weight = parseFloat(document.getElementById('tdee-weight').value);
+            const activity = parseFloat(document.getElementById('activity').value);
+
+            if (!age || !height || !weight) {
+                Swal.fire('Lỗi', 'Vui lòng nhập đầy đủ thông tin', 'error');
+                return;
+            }
+
+            let bmr = 0;
+            if (gender === 'male') {
+                bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            } else {
+                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
+            }
+
+            const tdee = Math.round(bmr * activity);
+            document.getElementById('tdee-value').textContent = tdee.toLocaleString('vi-VN');
+
+            document.getElementById('tdee-maintain').textContent = tdee.toLocaleString('vi-VN') + ' kcal';
+            document.getElementById('tdee-lose').textContent = Math.round(tdee - 500).toLocaleString('vi-VN') + ' kcal';
+            document.getElementById('tdee-gain').textContent = Math.round(tdee + 500).toLocaleString('vi-VN') + ' kcal';
+
+            document.getElementById('tdee-breakdown').style.display = 'flex';
+            const resultCard = document.getElementById('tdee-result-card');
+            resultCard.classList.add('active');
+
+            // Scroll to result on mobile
+            if (window.innerWidth < 850) {
+                resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+    </script>
+    <script src="js/cart-shared.js"></script>
+    <script src="search_new.js"></script>
+</body>
+
+</html>

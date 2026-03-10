@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Nhân Viên Giao Hàng</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #ff6b00;
+            --secondary-orange: #ff8e3c;
+            --dark-gray: #2d3436;
+            --light-gray: #f9f9fb;
+            --border-color: #edf2f7;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        body {
+            background-color: var(--light-gray);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--dark-gray);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background: var(--primary-orange);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 0.75rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            width: auto;
+            object-fit: contain;
+            margin-right: 5px;
+        }
+
+        .navbar-brand span {
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: white;
+            letter-spacing: -0.5px;
+        }
+
+        .navbar .text-end span#shipperNameDisplay {
+            color: white !important;
+        }
+
+        .navbar .text-end .text-muted {
+            color: rgba(255, 255, 255, 0.8) !important;
+        }
+
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+
+        .btn-logout:hover {
+            background: white;
+            color: var(--primary-orange);
+            transform: translateY(-1px);
+        }
+
+        /* Login Wrapper */
+        .login-wrapper {
+            min-height: calc(100vh - 70px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            padding: 20px;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 420px;
+            padding: 40px;
+            text-align: center;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-logo {
+            width: 100px;
+            margin-bottom: 25px;
+        }
+
+        .login-card h3 {
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: var(--dark-gray);
+        }
+
+        .form-floating-custom {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label-custom {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .input-group-login {
+            border: 2px solid #f1f5f9;
+            border-radius: 14px;
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+        }
+
+        .input-group-login:focus-within {
+            border-color: var(--primary-orange);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.1);
+        }
+
+        .input-icon {
+            padding: 12px 15px;
+            color: #94a3b8;
+        }
+
+        .form-control-login {
+            border: none;
+            background: transparent;
+            padding: 12px 10px;
+            width: 100%;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .form-control-login:focus {
+            outline: none;
+        }
+
+        .btn-login {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-top: 10px;
+            box-shadow: 0 10px 15px rgba(255, 107, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .btn-login:hover {
+            background: #e66000;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(255, 107, 0, 0.3);
+        }
+
+        /* Dashboard Styles */
+        #dashboard-section {
+            padding: 40px 0;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .dashboard-container {
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--shadow-md);
+            padding: 30px;
+            min-height: 600px;
+        }
+
+        .nav-tabs {
+            border-bottom: none;
+            background: #f1f5f9;
+            padding: 6px;
+            border-radius: 16px;
+            display: flex;
+            gap: 5px;
+            margin-bottom: 30px;
+        }
+
+        .nav-tabs .nav-item {
+            flex: 1;
+        }
+
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 12px;
+            padding: 12px 20px;
+            width: 100%;
+            font-weight: 700;
+            color: #64748b;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: transparent;
+        }
+
+        .nav-tabs .nav-link.active {
+            background: white;
+            color: var(--primary-orange) !important;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-tabs .nav-link:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--dark-gray);
+        }
+
+        /* Order Cards Premium */
+        .order-card {
+            background: white;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: all 0.3s;
+        }
+
+        .order-card:hover {
+            border-color: #ffd8b8;
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1.5px dashed #edf2f7;
+            margin-bottom: 20px;
+        }
+
+        .order-id {
+            color: var(--primary-orange);
+            font-weight: 800;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .order-time {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .info-title {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .customer-info-box {
+            background: #fcfcfc;
+            border-radius: 16px;
+            padding: 15px;
+            height: 100%;
+        }
+
+        .customer-name {
+            font-weight: 700;
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .customer-detail {
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .detail-icon {
+            color: var(--primary-orange);
+            font-size: 1.1rem;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .item-row:hover {
+            background: #f8fafc;
+            border-color: #f1f5f9;
+        }
+
+        .item-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            object-fit: cover;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: block;
+        }
+
+        .item-price {
+            font-size: 0.85rem;
+            color: #ef4444;
+            font-weight: 700;
+        }
+
+        .payment-box {
+            background: #fff5eb;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #ffd8b8;
+        }
+
+        .payment-label {
+            color: #9a4d10;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .payment-amount {
+            color: #e66000;
+            font-size: 1.5rem;
+            font-weight: 800;
+        }
+
+        .btn-action-primary {
+            background: var(--primary-orange);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
+        }
+
+        .btn-action-primary:hover {
+            background: #e66000;
+            transform: scale(1.03);
+            box-shadow: 0 6px 15px rgba(255, 107, 0, 0.3);
+        }
+
+        .btn-action-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-action-secondary:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status-info {
+            background: #e0f2fe;
+            color: #075985;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg d-none" id="navbar">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="./images/logo.png.png" alt="LavaWhey Logo">
+                <span class="ms-2">Shipper Center</span>
+            </a>
+            <div class="d-flex align-items-center">
+                <div class="me-3 d-none d-md-block text-end">
+                    <span id="shipperNameDisplay" class="fw-bold d-block"></span>
+                    <span class="text-muted small">Đối tác vận chuyển</span>
+                </div>
+                <button class="btn btn-logout" onclick="logout()">
+                    <i class="material-icons align-middle fs-6">logout</i> Đăng xuất
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <div class="login-wrapper" id="login-section">
+        <div class="login-card">
+            <img src="./images/logo.png.png" alt="LavaWhey" class="login-logo">
+            <h3>Chào mừng bạn!</h3>
+            <p class="text-muted mb-4">Đăng nhập để bắt đầu phiên làm việc</p>
+
+            <div class="form-floating-custom">
+                <label class="form-label-custom">Email hoặc Số điện thoại</label>
+                <div class="input-group-login">
+                    <span class="input-icon material-icons">account_circle</span>
+                    <input type="text" id="loginId" class="form-control-login" placeholder="Nhập thông tin truy cập..."
+                        required onkeypress="if(event.key === 'Enter') loginShipper()">
+                </div>
+            </div>
+
+            <button class="btn btn-login" onclick="loginShipper()">
+                Đăng nhập ngay
+            </button>
+
+            <p class="mt-4 small text-muted">Chưa có tài khoản? <a href="register-shipper.html"
+                    class="text-primary text-decoration-none fw-bold">Đăng ký ngay</a></p>
+        </div>
+    </div>
+
+    <!-- Dashboard Section -->
+    <div class="container d-none" id="dashboard-section">
+        <div class="dashboard-container">
+            <ul class="nav nav-tabs" id="shipperTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending"
+                        type="button" role="tab">
+                        <i class="material-icons">assignment</i> Chờ nhận
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping"
+                        type="button" role="tab">
+                        <i class="material-icons">local_shipping</i> Đang giao
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed"
+                        type="button" role="tab">
+                        <i class="material-icons">history</i> Lịch sử
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content mt-2" id="shipperTabsContent">
+                <div class="tab-pane fade show active" id="pending" role="tabpanel">
+                    <div id="pendingOrdersList"></div>
+                </div>
+                <div class="tab-pane fade" id="shipping" role="tabpanel">
+                    <div id="shippingOrdersList"></div>
+                </div>
+                <div class="tab-pane fade" id="completed" role="tabpanel">
+                    <div id="completedOrdersList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="js/stock-sync.js"></script>
+
+    <!-- Thư viện hỗ trợ -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPdSUkT56drPQGE9N4KvjM3ZoQaeamdao",
+            authDomain: "lavawhey.firebaseapp.com",
+            databaseURL: "https://lavawhey-default-rtdb.firebaseio.com",
+            projectId: "lavawhey",
+            storageBucket: "lavawhey.firebasestorage.app",
+            messagingSenderId: "261576736130",
+            appId: "1:261576736130:web:9d8b878a50e01c9591a39b",
+            measurementId: "G-BR9VJHPJGL"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        let currentShipper = JSON.parse(localStorage.getItem('currentShipper') || 'null');
+        let allOrders = {};
+
+        function init() {
+            if (currentShipper) {
+                showDashboard();
+            } else {
+                document.getElementById('login-section').classList.remove('d-none');
+                document.getElementById('dashboard-section').classList.add('d-none');
+                document.getElementById('navbar').classList.add('d-none');
+            }
+        }
+
+        async function loginShipper() {
+            const loginId = document.getElementById('loginId').value.trim();
+            if (!loginId) return Swal.fire('Lỗi', 'Vui lòng nhập Email hoặc SĐT', 'error');
+
+            try {
+                const snap = await db.ref('shippers').once('value');
+                const shippers = snap.val() || {};
+                let foundShipper = null;
+
+                for (let id in shippers) {
+                    if (shippers[id].email === loginId || shippers[id].phone === loginId) {
+                        foundShipper = { id, ...shippers[id] };
+                        break;
+                    }
+                }
+
+                if (foundShipper) {
+                    if (foundShipper.status === 'Tạm nghỉ') {
+                        return Swal.fire('Tài khoản bị khóa', 'Tài khoản của bạn đang ở trạng thái Tạm nghỉ', 'warning');
+                    }
+                    if (foundShipper.status === 'Chờ xác nhận') {
+                        return Swal.fire('Chờ xác nhận', 'Tài khoản của bạn đang chờ Admin xác nhận. Vui lòng quay lại sau!', 'info');
+                    }
+                    localStorage.setItem('currentShipper', JSON.stringify(foundShipper));
+                    currentShipper = foundShipper;
+                    Swal.fire('Thành công', 'Đăng nhập thành công', 'success').then(() => showDashboard());
+                } else {
+                    Swal.fire('Thất bại', 'Không tìm thấy thông tin tài khoản!', 'error');
+                }
+            } catch (e) {
+                console.error(e);
+                Swal.fire('Lỗi', 'Đã có lỗi xảy ra!', 'error');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentShipper');
+            currentShipper = null;
+            init();
+        }
+
+        function showDashboard() {
+            document.getElementById('login-section').classList.add('d-none');
+            document.getElementById('dashboard-section').classList.remove('d-none');
+            document.getElementById('navbar').classList.remove('d-none');
+            document.getElementById('shipperNameDisplay').innerText = `Xin chào, ${currentShipper.name}`;
+            loadOrders();
+        }
+
+        function loadOrders() {
+            db.ref('orders').on('value', snap => {
+                allOrders = snap.val() || {};
+                renderOrders();
+            });
+        }
+
+        function renderOrders() {
+            const pendingList = document.getElementById('pendingOrdersList');
+            const shippingList = document.getElementById('shippingOrdersList');
+            const completedList = document.getElementById('completedOrdersList');
+
+            pendingList.innerHTML = '';
+            shippingList.innerHTML = '';
+            completedList.innerHTML = '';
+
+            const ordersArr = Object.entries(allOrders).sort((a, b) => new Date(b[1].createdAt) - new Date(a[1].createdAt));
+
+            ordersArr.forEach(([id, order]) => {
+                const orderStatus = (order.status || 'pending').toLowerCase();
+                const paymentStatus = (order.paymentStatus || 'unpaid').toLowerCase();
+
+                // 1. Phân loại đơn hàng đang giao hoặc đã hoàn thành của shipper hiện tại
+                if (order.shipperId === currentShipper.id) {
+                    if (orderStatus === 'shipping') {
+                        shippingList.innerHTML += createOrderCard(id, order, 'shipping');
+                    } else if (['delivered', 'completed', 'paid', 'cancel', 'cancelled'].includes(orderStatus)) {
+                        completedList.innerHTML += createOrderCard(id, order, 'completed', orderStatus);
+                    }
+                }
+                // 2. Phân loại đơn hàng chờ nhận (Chưa có ai nhận, và đang ở trạng thái chờ giao)
+                else if (!order.shipperId) {
+                    // Chỉ hiện những đơn hàng 'pending' hoặc 'processing' và CHƯA bị hủy
+                    if (['pending', 'processing', 'paid'].includes(orderStatus) && orderStatus !== 'cancelled' && orderStatus !== 'cancel') {
+                        pendingList.innerHTML += createOrderCard(id, order, 'pending');
+                    }
+                }
+            });
+
+            if (!pendingList.innerHTML) pendingList.innerHTML = '<div class="alert alert-info">Không có đơn hàng mới nào.</div>';
+            if (!shippingList.innerHTML) shippingList.innerHTML = '<div class="alert alert-info">Bạn chưa có đơn hàng nào đang giao.</div>';
+            if (!completedList.innerHTML) completedList.innerHTML = '<div class="alert alert-info">Bạn chưa hoàn thành đơn hàng nào.</div>';
+        }
+
+        function createOrderCard(id, order, type, finalStatus = null) {
+            const totalItems = order.items ? order.items.reduce((sum, item) => sum + (item.quantity || 1), 0) : 0;
+            const itemsHtml = order.items ? order.items.map(item => `
+                <div class="item-row">
+                    <img src="${item.image || 'https://via.placeholder.com/60?text=No+Image'}" class="item-img">
+                    <div class="item-info">
+                        <span class="item-name">${item.name}</span>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small">Số lượng: ${item.quantity || 1}</span>
+                            <span class="item-price">${(item.price || 0).toLocaleString('vi-VN')} ₫</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('') : '';
+
+            let actionArea = '';
+            if (type === 'pending') {
+                actionArea = `<button class="btn-action-primary w-100 justify-content-center" onclick="acceptOrder('${id}')">
+                    <i class="material-icons">check_circle</i> Nhận Giao Đơn Này
+                </button>`;
+            } else if (type === 'shipping') {
+                actionArea = `
+                    <div class="w-100">
+                        <div class="customer-info-box mb-3 text-start">
+                            <span class="payment-label text-start mb-2"><i class="material-icons align-middle fs-6 me-1">photo_camera</i> Xác nhận giao hàng</span>
+                            <input type="file" id="proofInput_${id}" accept="image/*" class="d-none" onchange="uploadProofPhoto('${id}')">
+                            <div class="d-flex gap-3 align-items-center">
+                                <button class="btn-action-secondary" id="uploadBtn_${id}" onclick="document.getElementById('proofInput_${id}').click()">
+                                    <i class="material-icons">cloud_upload</i> Tải ảnh bằng chứng
+                                </button>
+                                <span id="status_${id}" class="small text-muted">Chưa có ảnh</span>
+                            </div>
+                            <img id="preview_${id}" class="proof-photo-preview mt-2 w-100" style="border-radius:12px; display:none">
+                            <input type="hidden" id="proofUrl_${id}" value="">
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button class="btn-action-primary flex-grow-1 justify-content-center" id="completeBtn_${id}" onclick="completeOrder('${id}')" disabled>
+                                <i class="material-icons">payments</i> Đã Thanh Toán
+                            </button>
+                            <button class="btn-action-secondary text-danger" onclick="failedOrder('${id}')">
+                                <i class="material-icons">cancel</i> Thất bại
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'completed') {
+                const isSuccess = !['cancel', 'cancelled'].includes(finalStatus);
+                const badgeClass = isSuccess ? 'status-success' : 'status-danger';
+                const badgeText = isSuccess ? 'Thành công' : 'Đã hủy / Thất bại';
+                const proofHtml = order.proofPhotoUrl ? `
+                    <div class="customer-info-box mt-3 text-start">
+                        <span class="info-title mb-2" style="font-size: 0.7rem;"><i class="material-icons fs-6">image</i> Ảnh minh chứng</span>
+                        <a href="${order.proofPhotoUrl}" target="_blank">
+                            <img src="${order.proofPhotoUrl}" class="w-100 rounded" style="max-height: 120px; object-fit: cover;">
+                        </a>
+                    </div>
+                ` : '';
+                actionArea = `
+                    <div class="text-end">
+                        <span class="status-badge ${badgeClass}">${badgeText}</span>
+                        ${proofHtml}
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">
+                            <i class="material-icons">receipt</i>
+                            #${id.substring(0, 8).toUpperCase()}
+                        </div>
+                        <div class="order-time">
+                            <i class="material-icons fs-6">schedule</i>
+                            ${order.createdAt ? new Date(order.createdAt).toLocaleString('vi-VN') : ''}
+                        </div>
+                    </div>
+                    
+                    <div class="row g-4 mb-4">
+                        <div class="col-md-6">
+                            <div class="customer-info-box">
+                                <span class="info-title"><i class="material-icons">person</i> Khách hàng</span>
+                                <span class="customer-name">${order.customer?.firstName || ''} ${order.customer?.lastName || ''}</span>
+                                <div class="customer-detail">
+                                    <i class="material-icons detail-icon">phone</i>
+                                    <a href="tel:${order.customer?.phone || ''}" class="text-decoration-none fw-bold text-dark">${order.customer?.phone || ''}</a>
+                                </div>
+                                <div class="customer-detail">
+                                    <i class="material-icons detail-icon">location_on</i>
+                                    <span>${order.customer?.address || ''}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="customer-info-box">
+                                <span class="info-title"><i class="material-icons">shopping_bag</i> Giỏ hàng (${totalItems})</span>
+                                <div style="max-height: 150px; overflow-y: auto; padding-right: 5px;">
+                                    ${itemsHtml}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <div class="payment-box">
+                                <span class="payment-label">Tổng thu hộ (COD)</span>
+                                <span class="payment-amount">${((order.total || 0) - (order.discountAmount || 0)).toLocaleString('vi-VN')} ₫</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            ${actionArea}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        window.acceptOrder = async function (orderId) {
+            Swal.fire({
+                title: 'Nhận đơn hàng?',
+                text: 'Bạn chắc chắn muốn nhận giao đơn hàng này?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Đồng ý',
+                cancelButtonText: 'Hủy'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const nowIso = new Date().toISOString();
+                        await db.ref('orders/' + orderId).update({
+                            status: 'shipping',
+                            shipperId: currentShipper.id,
+                            shipperName: currentShipper.name,
+                            shipperPhone: currentShipper.phone,
+                            updatedAt: nowIso
+                        });
+
+                        const invSnap = await db.ref('invoices').orderByChild('orderKey').equalTo(orderId).once('value');
+                        const invoices = invSnap.val() || {};
+                        for (let invId in invoices) {
+                            await db.ref('invoices/' + invId).update({ status: 'shipping', updatedAt: nowIso });
+                        }
+
+                        Swal.fire('Thành công', 'Đã nhận đơn hàng, vui lòng tiến hành giao!', 'success');
+                    } catch (e) { console.error(e); Swal.fire('Lỗi', 'Không thể nhận đơn', 'error'); }
+                }
+            });
+        };
+
+        window.completeOrder = async function (orderId) {
+            const proofUrl = document.getElementById('proofUrl_' + orderId)?.value;
+            if (!proofUrl) {
+                return Swal.fire('Lỗi', 'Vui lòng tải lên ảnh xác nhận giao hàng trước khi hoàn tất!', 'warning');
+            }
+
+            Swal.fire({
+                title: 'Xác nhận khách đã thanh toán?',
+                text: 'Hệ thống sẽ cập nhật trạng thái Đã giao và Đã thanh toán tiền mặt.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy'
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        const nowIso = new Date().toISOString();
+                        const updateData = {
+                            status: 'delivered',
+                            paymentStatus: 'paid', // Cập nhật đã thanh toán
+                            deliveredAt: nowIso,
+                            updatedAt: nowIso,
+                            proofPhotoUrl: proofUrl // Lưu URL ảnh bằng chứng
+                        };
+                        await db.ref('orders/' + orderId).update(updateData);
+
+                        const invSnap = await db.ref('invoices').orderByChild('orderKey').equalTo(orderId).once('value');
+                        const invoices = invSnap.val() || {};
+                        for (let invId in invoices) {
+                            await db.ref('invoices/' + invId).update({
+                                status: 'delivered',
+                                paymentStatus: 'paid',
+                                updatedAt: nowIso,
+                                proofPhotoUrl: proofUrl
+                            });
+                        }
+
+                        Swal.fire('Thành công', 'Đã xác nhận giao hàng thành công', 'success');
+
+                        // Cập nhật số lượng đã bán cho sản phẩm
+                        try {
+                            const order = allOrders[orderId];
+                            if (order && order.items && typeof incrementSold === 'function') {
+                                await incrementSold(order.items, 1);
+                            }
+                        } catch (soldErr) {
+                            console.warn('Không thể cập nhật số lượng đã bán:', soldErr);
+                        }
+                    } catch (e) { console.error(e); Swal.fire('Lỗi', 'Lỗi hệ thống', 'error'); }
+                }
+            });
+        };
+
+        window.uploadProofPhoto = async function (orderId) {
+            const fileInput = document.getElementById('proofInput_' + orderId);
+            const file = fileInput.files[0];
+            const statusDiv = document.getElementById('status_' + orderId);
+            const previewImg = document.getElementById('preview_' + orderId);
+            const proofUrlInput = document.getElementById('proofUrl_' + orderId);
+            const completeBtn = document.getElementById('completeBtn_' + orderId);
+            const uploadBtn = document.getElementById('uploadBtn_' + orderId);
+
+            if (!file) return;
+
+            // Kiểm tra kích thước file (5MB)
+            if (file.size > 5 * 1024 * 1024) {
+                Swal.fire('Lỗi!', 'File quá lớn. Vui lòng chọn file dưới 5MB.', 'error');
+                return;
+            }
+
+            try {
+                statusDiv.innerHTML = '<span class="text-primary"><i class="material-icons align-middle fs-6">sync</i> Đang tải lên...</span>';
+                uploadBtn.disabled = true;
+
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('upload_preset', 'LAVAWHEY');
+                formData.append('cloud_name', 'dyuwzsfna');
+
+                const response = await fetch('https://api.cloudinary.com/v1_1/dyuwzsfna/image/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Upload failed');
+
+                const result = await response.json();
+
+                if (result.secure_url) {
+                    proofUrlInput.value = result.secure_url;
+                    previewImg.src = result.secure_url;
+                    previewImg.style.display = 'block';
+                    statusDiv.innerHTML = '<span class="text-success fw-bold"><i class="material-icons align-middle fs-6">check_circle</i> Đã tải lên thành công</span>';
+                    completeBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error(error);
+                statusDiv.innerHTML = '<span class="text-danger">Lỗi tải lên! Thử lại</span>';
+                uploadBtn.disabled = false;
+            }
+        };
+
+        window.failedOrder = async function (orderId) {
+            Swal.fire({
+                title: 'Giao hàng thất bại?',
+                input: 'text',
+                inputLabel: 'Lý do thất bại (Ví dụ: Không liên lạc được)',
+                inputPlaceholder: 'Nhập lý do...',
+                showCancelButton: true,
+                confirmButtonText: 'Xác nhận',
+                cancelButtonText: 'Hủy'
+            }).then(async (result) => {
+                if (result.isConfirmed && result.value) {
+                    try {
+                        const nowIso = new Date().toISOString();
+                        await db.ref('orders/' + orderId).update({
+                            status: 'cancel',
+                            failedReason: result.value,
+                            updatedAt: nowIso
+                        });
+
+                        const invSnap = await db.ref('invoices').orderByChild('orderKey').equalTo(orderId).once('value');
+                        const invoices = invSnap.val() || {};
+                        for (let invId in invoices) {
+                            await db.ref('invoices/' + invId).update({ status: 'cancel', updatedAt: nowIso });
+                        }
+
+                        Swal.fire('Thành công', 'Đã cập nhật trạng thái thất bại', 'warning');
+                    } catch (e) { console.error(e); Swal.fire('Lỗi', 'Lỗi hệ thống', 'error'); }
+                }
+            });
+        };
+
+        init();
+    </script>
+</body>
+
+</html>

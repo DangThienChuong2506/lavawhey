@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,20 +8,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <!-- Tìm kiếm & header đồng bộ với các trang khác -->
+    <script src="search_new.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
- <script src="mobile.js"></script>
+    <script src="mobile.js"></script>
     <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="search.css">
     <style>
-    :root {
-        --primary-color: #FF6B00;
-        --secondary-color: #FF8533;
-        --dark-color: #333;
-        --light-color: #fff;
-        --gray-color: #f4f4f4;
+        :root {
+            --primary-color: #FF6B00;
+            --secondary-color: #FF8533;
+            --dark-color: #333;
+            --light-color: #fff;
+            --gray-color: #f4f4f4;
             --success-color: #4CAF50;
             --error-color: #f44336;
         }
@@ -29,14 +36,14 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-    }
+        }
 
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        line-height: 1.6;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
             background-color: var(--gray-color);
-        color: var(--dark-color);
-    }
+            color: var(--dark-color);
+        }
 
         .checkout-container {
             max-width: 1200px;
@@ -51,14 +58,14 @@
             background: var(--light-color);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .checkout-summary {
             background: var(--light-color);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             height: fit-content;
             position: sticky;
             top: 20px;
@@ -79,7 +86,7 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-        font-weight: 500;
+            font-weight: 500;
             color: var(--dark-color);
         }
 
@@ -99,7 +106,7 @@
         .form-group textarea:focus {
             border-color: var(--primary-color);
             outline: none;
-            box-shadow: 0 0 0 2px rgba(255,107,0,0.1);
+            box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.1);
         }
 
         .form-row {
@@ -119,21 +126,21 @@
             border: 2px solid #ddd;
             border-radius: 10px;
             padding: 15px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        display: flex;
-        align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
             gap: 10px;
         }
 
         .payment-method:hover {
             border-color: var(--primary-color);
-            background-color: rgba(255,107,0,0.05);
+            background-color: rgba(255, 107, 0, 0.05);
         }
 
         .payment-method.selected {
             border-color: var(--primary-color);
-            background-color: rgba(255,107,0,0.1);
+            background-color: rgba(255, 107, 0, 0.1);
         }
 
         .payment-method img {
@@ -147,36 +154,36 @@
         }
 
         .order-item {
-        display: flex;
-        align-items: center;
+            display: flex;
+            align-items: center;
             gap: 15px;
             padding: 15px 0;
-        border-bottom: 1px solid #eee;
-    }
+            border-bottom: 1px solid #eee;
+        }
 
         .order-item:last-child {
-        border-bottom: none;
-    }
+            border-bottom: none;
+        }
 
         .order-item img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
             border-radius: 8px;
-    }
+        }
 
         .order-item-details {
-        flex: 1;
-    }
+            flex: 1;
+        }
 
         .order-item-name {
-        font-weight: 500;
+            font-weight: 500;
             margin-bottom: 5px;
-    }
+        }
 
         .order-item-price {
-        color: var(--primary-color);
-        font-weight: 600;
+            color: var(--primary-color);
+            font-weight: 600;
         }
 
         .order-item-quantity {
@@ -185,8 +192,8 @@
         }
 
         .summary-row {
-        display: flex;
-        justify-content: space-between;
+            display: flex;
+            justify-content: space-between;
             margin-bottom: 10px;
             padding: 10px 0;
             border-bottom: 1px dashed #eee;
@@ -198,28 +205,28 @@
             margin-top: 15px;
             padding-top: 15px;
             font-size: 1.2rem;
-        font-weight: 600;
-        color: var(--primary-color);
-    }
+            font-weight: 600;
+            color: var(--primary-color);
+        }
 
         .checkout-button {
             width: 100%;
             padding: 15px;
             background: var(--primary-color);
             color: white;
-        border: none;
-        border-radius: 8px;
+            border: none;
+            border-radius: 8px;
             font-size: 1.1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
             margin-top: 20px;
-    }
+        }
 
         .checkout-button:hover {
             background: var(--secondary-color);
-        transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255,107,0,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 0, 0.3);
         }
 
         .checkout-button:active {
@@ -227,12 +234,12 @@
         }
 
         .secure-checkout {
-        display: flex;
-        align-items: center;
+            display: flex;
+            align-items: center;
             justify-content: center;
             gap: 10px;
             margin-top: 15px;
-        color: #666;
+            color: #666;
             font-size: 0.9rem;
         }
 
@@ -247,25 +254,25 @@
         }
 
         .promo-input {
-        display: flex;
+            display: flex;
             gap: 10px;
         }
 
         .promo-input input {
-        flex: 1;
+            flex: 1;
             padding: 10px 15px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
         }
 
         .promo-input button {
             padding: 10px 20px;
             background: var(--dark-color);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
             transition: background 0.3s ease;
         }
 
@@ -278,25 +285,25 @@
         }
 
         .shipping-option {
-        display: flex;
+            display: flex;
             align-items: center;
             gap: 10px;
-        padding: 15px;
+            padding: 15px;
             border: 1px solid #ddd;
-        border-radius: 8px;
+            border-radius: 8px;
             margin-bottom: 10px;
-        cursor: pointer;
-        transition: all 0.3s ease;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .shipping-option:hover {
             border-color: var(--primary-color);
-            background-color: rgba(255,107,0,0.05);
+            background-color: rgba(255, 107, 0, 0.05);
         }
 
         .shipping-option.selected {
             border-color: var(--primary-color);
-            background-color: rgba(255,107,0,0.1);
+            background-color: rgba(255, 107, 0, 0.1);
         }
 
         .shipping-option input[type="radio"] {
@@ -304,21 +311,21 @@
         }
 
         .shipping-option-details {
-        flex: 1;
+            flex: 1;
         }
 
         .shipping-option-price {
-        font-weight: 600;
+            font-weight: 600;
             color: var(--primary-color);
-    }
+        }
 
         .estimated-delivery {
             font-size: 0.9rem;
-        color: #666;
+            color: #666;
             margin-top: 5px;
-    }
+        }
 
-    @media (max-width: 992px) {
+        @media (max-width: 992px) {
             .checkout-container {
                 grid-template-columns: 1fr;
             }
@@ -344,19 +351,19 @@
             padding: 20px;
             background: white;
             border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         .progress-steps {
             display: flex;
             justify-content: space-between;
-        position: relative;
+            position: relative;
             margin-bottom: 30px;
-    }
+        }
 
         .progress-steps::before {
-        content: '';
-        position: absolute;
+            content: '';
+            position: absolute;
             top: 50%;
             left: 0;
             right: 0;
@@ -367,61 +374,62 @@
         }
 
         .progress-step {
-        position: relative;
+            position: relative;
             z-index: 2;
             background: white;
             width: 40px;
             height: 40px;
             border-radius: 50%;
             border: 2px solid #ddd;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: bold;
-        color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #666;
         }
 
         .progress-step.active {
             border-color: var(--primary-color);
-        color: var(--primary-color);
-    }
+            color: var(--primary-color);
+        }
 
         .progress-step.completed {
             border-color: var(--success-color);
             background: var(--success-color);
-        color: white;
+            color: white;
         }
 
         .progress-labels {
-        display: flex;
+            display: flex;
             justify-content: space-between;
             margin-top: 10px;
         }
 
         .progress-label {
-        text-align: center;
-        font-size: 0.9rem;
+            text-align: center;
+            font-size: 0.9rem;
             color: #666;
             flex: 1;
         }
 
         .progress-label.active {
-        color: var(--primary-color);
-        font-weight: 500;
-    }
+            color: var(--primary-color);
+            font-weight: 500;
+        }
 
         /* Order Success Animation */
         @keyframes checkmark {
             0% {
                 stroke-dashoffset: 100;
             }
+
             100% {
                 stroke-dashoffset: 0;
             }
         }
 
         .success-animation {
-        text-align: center;
+            text-align: center;
             padding: 40px;
         }
 
@@ -464,98 +472,220 @@
         .success-button {
             display: inline-block;
             padding: 12px 25px;
-        background: var(--primary-color);
-        color: white;
+            background: var(--primary-color);
+            color: white;
             text-decoration: none;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
 
         .success-button:hover {
             background: var(--secondary-color);
-        transform: translateY(-2px);
-    }
+            transform: translateY(-2px);
+        }
 
-    .modal {
-        display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100vw; height: 100vh;
-        background: rgba(0,0,0,0.4); align-items: center; justify-content: center;
-    }
-    .modal.show { display: flex; }
-    .modal-content { background: #fff; border-radius: 10px; padding: 30px; position: relative; }
-</style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.4);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+        }
+    </style>
+    <script src="js/auth-global.js"></script>
+    <script src="js/marquee.js" charset="UTF-8"></script>
+    <script src="js/stock-sync.js"></script>
+    <link rel="stylesheet" href="modals.css">
+    <link rel="stylesheet" href="header.css">
 </head>
+
 <body>
+    <!-- Top Banner Marquee -->
+    <div class="top-banner-marquee">
+        <div class="marquee-inner">
+            <div class="marquee-content">
+                <span>• Cam kết chuẩn 100% chính hãng</span>
+                <span>• Đổi trả miễn phí 15 ngày</span>
+                <span>• Giao siêu tốc nội thành Cần Thơ trong 1-4h</span>
+                <span>• Tổng hợp Supplement uy tín hàng đầu hiện nay</span>
+                <span>• FREESHIP toàn quốc cho đơn hàng từ 1.000.000 Đ</span>
+                <span>• Cam kết chuẩn 100% chính hãng</span>
+                <span>• Đổi trả miễn phí 15 ngày</span>
+                <span>• Giao siêu tốc nội thành Cần Thơ trong 1-4h</span>
+                <span>• Tổng hợp Supplement uy tín hàng đầu hiện nay</span>
+                <span>• FREESHIP toàn quốc cho đơn hàng từ 1.000.000 Đ</span>
+            </div>
+        </div>
+    </div>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <a href="index.html">
+                    <img src="images/logo.png.png" alt="LavaWhey Logo">
+                </a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Trang chủ</a></li>
+                <li><a href="member.html">Thành viên</a></li>
+                <li><a href="products.html">Sản phẩm</a></li>
+                <li><a href="news.html">Tin tức</a></li>
+                <li><a href="about.html">Giới thiệu</a></li>
+                <li><a href="contact.html">Liên hệ</a></li>
+                <li><a href="policy.html">Chính sách</a></li>
+                <li><a href="tools.html">Công cụ</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm..." class="search-input">
+                <div id="search-results"></div>
+                <button class="search-button"><i class="fas fa-search"></i></button>
+                <div class="cart-container">
+                    <div class="btn-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </div>
+                    <div class="cart-dropdown">
+                        <div class="cart-header">
+                            <h3>
+                                <i class="fas fa-shopping-cart"></i>
+                                Giỏ hàng
+                                <span class="cart-count-badge">0 sản phẩm</span>
+                            </h3>
+                        </div>
+                        <div class="cart-items">
+                            <!-- Cart items will be dynamically added here -->
+                        </div>
+                        <div class="cart-summary">
+                            <div class="cart-summary-row">
+                                <span>Tạm tính:</span>
+                                <span>0₫</span>
+                            </div>
+                            <div class="cart-summary-row">
+                                <span>Phí vận chuyển:</span>
+                                <span>0₫</span>
+                            </div>
+                            <div class="cart-summary-row total">
+                                <span>Tổng cộng:</span>
+                                <span>0₫</span>
+                            </div>
+                        </div>
+                        <div class="cart-buttons">
+                            <button class="btn-continue">Tiếp tục mua</button>
+                            <button class="btn-checkout">Thanh toán</button>
+                        </div>
+                        <div class="empty-cart" style="display: none;">
+                            <i class="fas fa-shopping-cart"></i>
+                            <p>Giỏ hàng của bạn đang trống</p>
+                            <a href="products.html" class="btn-shop">Mua sắm ngay</a>
+                        </div>
+                    </div>
+                </div>
+                <a href="#" class="btn-login">Đăng nhập</a>
+            </div>
+        </nav>
+    </header>
     <div class="checkout-container">
         <!-- Progress Bar -->
         <div class="checkout-progress" style="grid-column: 1 / -1;">
             <div class="progress-steps">
                 <div class="progress-step completed">
                     <i class="fas fa-check"></i>
-            </div>
+                </div>
                 <div class="progress-step active">2</div>
                 <div class="progress-step">3</div>
-                    </div>
+            </div>
             <div class="progress-labels">
                 <div class="progress-label completed">Giỏ hàng</div>
                 <div class="progress-label active">Thanh toán</div>
                 <div class="progress-label">Hoàn tất</div>
-                        </div>
-                        </div>
+            </div>
+        </div>
 
         <!-- Checkout Form -->
         <div class="checkout-form">
             <h2 class="section-title">Thông tin thanh toán</h2>
-            
+
             <form id="checkoutForm">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="firstName">Họ</label>
                         <input type="text" id="firstName" required>
-            </div>
+                    </div>
                     <div class="form-group">
                         <label for="lastName">Tên</label>
                         <input type="text" id="lastName" required>
-                </div>
+                    </div>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" required>
-            </div>
+                </div>
 
                 <div class="form-group">
                     <label for="phone">Số điện thoại</label>
                     <input type="tel" id="phone" required>
-            </div>
+                </div>
 
                 <div class="form-group">
                     <label for="address">Địa chỉ</label>
                     <input type="text" id="address" required>
-            </div>
+                </div>
 
                 <div class="form-group">
                     <label for="note">Ghi chú</label>
-                    <textarea id="note" rows="4" placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."></textarea>
-    </div>
+                    <textarea id="note" rows="4"
+                        placeholder="Ghi chú về đơn hàng, ví dụ: thời gian hay chỉ dẫn địa điểm giao hàng chi tiết hơn."></textarea>
+                </div>
 
                 <h3>Phương thức thanh toán</h3>
                 <div class="payment-methods">
-                    <div class="payment-method selected">
-                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" alt="VNPay" style="width: 60px; height: 60px;">
+                    <div class="payment-method selected" data-method="vnpay">
+                        <img src="https://cdn.haitrieu.com/wp-content/uploads/2022/10/Icon-VNPAY-QR.png" alt="VNPay"
+                            style="width: 60px; height: 60px;">
                         <div style="flex: 1;">
-                            <span style="font-weight: 600; display: block; margin-bottom: 5px;">Thanh toán qua VNPay</span>
-                            <span style="font-size: 0.9rem; color: #666;">Thanh toán an toàn qua cổng VNPay QR</span>
+                            <span style="font-weight: 600; display: block; margin-bottom: 5px;">Thanh toán qua
+                                VNPay</span>
+                            <span style="font-size: 0.9rem; color: #666;">Thanh toán an toàn qua cổng VNPay QR <b
+                                    style="color: #e74c3c;">(Giảm 10%)</b></span>
+                        </div>
+                        <i class="fas fa-check-circle check-icon"
+                            style="color: var(--primary-color); font-size: 1.5rem;"></i>
                     </div>
-                        <i class="fas fa-check-circle" style="color: var(--primary-color); font-size: 1.5rem;"></i>
+                    <div class="payment-method" data-method="cod">
+                        <i class="fas fa-money-bill-wave"
+                            style="font-size: 2.5rem; color: #2ecc71; margin-right: 15px; margin-left: 5px;"></i>
+                        <div style="flex: 1;">
+                            <span style="font-weight: 600; display: block; margin-bottom: 5px;">Thanh toán khi nhận hàng
+                                (COD)</span>
+                            <span style="font-size: 0.9rem; color: #666;">Nhận hàng rồi mới thanh toán tiền mặt</span>
+                        </div>
+                        <i class="fas fa-check-circle check-icon"
+                            style="color: var(--primary-color); font-size: 1.5rem; display: none;"></i>
                     </div>
                 </div>
-                </form>
-                </div>
+            </form>
+        </div>
 
         <!-- Order Summary -->
         <div class="checkout-summary">
             <h2 class="section-title">Đơn hàng của bạn</h2>
-            
+
             <div class="order-summary-list">
                 <!-- Order items will be dynamically added here -->
             </div>
@@ -565,17 +695,21 @@
                 <div class="promo-input">
                     <input type="text" placeholder="Nhập mã giảm giá">
                     <button>Áp dụng</button>
-        </div>
-    </div>
+                </div>
+            </div>
 
             <div class="summary-row">
                 <span>Tạm tính</span>
                 <span class="subtotal">0₫</span>
             </div>
-            <div class="summary-row">
-                <span>Giảm giá</span>
-                <span class="discount">0₫</span>
-                </div>
+            <div class="summary-row" id="vnpayDiscountRow" style="display: none;">
+                <span>Giảm giá VNPay (10%)</span>
+                <span class="vnpay-discount">0₫</span>
+            </div>
+            <div class="summary-row" id="couponDiscountRow" style="display: none;">
+                <span>Mã giảm giá</span>
+                <span class="coupon-discount">0₫</span>
+            </div>
             <div class="summary-row total">
                 <span>Tổng cộng</span>
                 <span class="total-amount">0₫</span>
@@ -619,13 +753,13 @@
         firebase.initializeApp(firebaseConfig);
 
         // Đặt các hàm này ở phạm vi toàn cục, trước DOMContentLoaded
+        // Dùng chung 1 key với toàn bộ website (được định nghĩa trong js/cart-shared.js)
         function getCartKey() {
-            const user = firebase.auth().currentUser;
-            return user ? `cart_${user.uid}` : 'cart_guest';
+            return 'cart_main';
         }
         function loadCart() {
-            const cart = JSON.parse(localStorage.getItem(getCartKey())) || [];
-            return cart;
+            const savedCart = localStorage.getItem(getCartKey());
+            return savedCart ? JSON.parse(savedCart) : [];
         }
         function formatPrice(price) {
             return new Intl.NumberFormat('vi-VN', {
@@ -641,7 +775,6 @@
             if (cart.length === 0) {
                 orderSummaryList.innerHTML = '<div style="text-align:center;color:#999;padding:20px 0;">Giỏ hàng của bạn đang trống</div>';
                 subtotalElement.textContent = formatPrice(0);
-                // Ẩn phí vận chuyển
                 if (shippingElement) shippingElement.parentElement.style.display = 'none';
                 discountElement.textContent = formatPrice(0);
                 totalElement.textContent = formatPrice(0);
@@ -649,7 +782,7 @@
             }
 
             orderSummaryList.innerHTML = cart.map(item => {
-                const price = typeof item.price === 'string' 
+                const price = typeof item.price === 'string'
                     ? parseInt(item.price.replace(/[^\d]/g, ''))
                     : item.price;
                 subtotal += price * item.quantity;
@@ -671,17 +804,70 @@
             // Ẩn phí vận chuyển
             if (shippingElement) shippingElement.parentElement.style.display = 'none';
 
-            // Update summary
-            const discount = 0;
-            const total = subtotal - discount;
-
+            // Cập nhật giá trị Tạm tính UI trước
             subtotalElement.textContent = formatPrice(subtotal);
-            discountElement.textContent = formatPrice(discount);
-            totalElement.textContent = formatPrice(total);
+
+            // Gọi hàm cập nhật tổng quát
+            updateOrderSummary();
+        }
+
+        // Hàm duy nhất để tính toán và hiển thị giảm giá + tổng tiền
+        function updateOrderSummary() {
+            const subtotalText = subtotalElement.textContent.replace(/[^\d]/g, '');
+            const subtotal = parseInt(subtotalText) || 0;
+
+            // 1. Phí vận chuyển (nếu có)
+            let shipping = 0;
+            const shippingText = shippingElement?.textContent?.replace(/[^\d]/g, '');
+            if (shippingText) shipping = parseInt(shippingText) || 0;
+
+            // 2. Giảm giá VNPay (10% nếu chọn VNPay)
+            const paymentMethodDiv = document.querySelector('.payment-method.selected');
+            const selectedMethod = paymentMethodDiv?.dataset.method || 'vnpay';
+            const vnpayDiscount = (selectedMethod === 'vnpay') ? Math.round(subtotal * 0.1) : 0;
+
+            const vnpayRow = document.getElementById('vnpayDiscountRow');
+            const vnpayEl = document.querySelector('.vnpay-discount');
+            if (vnpayRow && vnpayEl) {
+                if (vnpayDiscount > 0) {
+                    vnpayRow.style.display = 'flex';
+                    vnpayEl.textContent = '-' + formatPrice(vnpayDiscount);
+                } else {
+                    vnpayRow.style.display = 'none';
+                }
+            }
+
+            // 3. Giảm giá từ Coupon (áp dụng từ localStorage)
+            let couponDiscount = 0;
+            const couponData = JSON.parse(localStorage.getItem('appliedCoupon'));
+            const couponRow = document.getElementById('couponDiscountRow');
+            const couponEl = document.querySelector('.coupon-discount');
+
+            if (couponData) {
+                if (couponData.type === 'percent' && couponData.percentValue) {
+                    couponDiscount = Math.round(subtotal * couponData.percentValue / 100);
+                } else {
+                    couponDiscount = couponData.discount || 0;
+                }
+
+                if (couponRow && couponEl) {
+                    couponRow.style.display = 'flex';
+                    couponRow.querySelector('span:first-child').textContent = `Mã giảm giá (${couponData.code})`;
+                    couponEl.textContent = '-' + formatPrice(couponDiscount);
+                }
+            } else if (couponRow) {
+                couponRow.style.display = 'none';
+            }
+
+            const totalDiscount = vnpayDiscount + couponDiscount;
+            const finalTotal = subtotal + shipping - totalDiscount;
+
+            // Cập nhật tổng cổng
+            totalElement.textContent = formatPrice(finalTotal);
         }
 
         // Khai báo các biến toàn cục để dùng cho displayCartItems
-        let orderSummaryList, subtotalElement, shippingElement, discountElement, totalElement;
+        let orderSummaryList, subtotalElement, shippingElement, totalElement;
 
         // Thêm biến toàn cục cho coupon
         let appliedCoupon = null;
@@ -690,61 +876,58 @@
             const couponInput = document.querySelector('.promo-input input');
             const couponBtn = document.querySelector('.promo-input button');
             if (!couponInput || !couponBtn) return;
-            couponBtn.addEventListener('click', async function(e) {
+            couponBtn.addEventListener('click', async function (e) {
                 e.preventDefault();
                 const code = couponInput.value.trim().toUpperCase();
                 if (!code) return;
-                // Lấy mã giảm giá từ Firebase
-                const couponSnap = await firebase.database().ref('coupons/' + code).once('value');
-                const coupon = couponSnap.val();
-                if (!coupon || coupon.status !== 'active') {
+                // Lấy tất cả mã giảm giá từ Firebase và tìm mã khớp
+                const couponsSnap = await firebase.database().ref('coupons').once('value');
+                const couponsData = couponsSnap.val();
+                let coupon = null;
+
+                if (couponsData) {
+                    const couponsArr = Array.isArray(couponsData) ? couponsData : Object.values(couponsData);
+                    coupon = couponsArr.find(c => c.code === code && c.status === 'active');
+                }
+
+                if (!coupon) {
                     Swal.fire('Lỗi', 'Mã giảm giá không hợp lệ hoặc đã hết hạn.', 'error');
                     appliedCoupon = null;
                     localStorage.removeItem('appliedCoupon');
                     updateDiscountDisplay(0, null);
-                    return;
-                }
-                // Kiểm tra ngày hiệu lực
-                const now = new Date();
-                const start = new Date(coupon.startDate);
-                const end = new Date(coupon.endDate);
-                if (now < start || now > end) {
-                    Swal.fire('Lỗi', 'Mã giảm giá chưa đến hạn hoặc đã hết hạn.', 'error');
-                    appliedCoupon = null;
-                    localStorage.removeItem('appliedCoupon');
-                    updateDiscountDisplay(0, null);
+                    displayCartItems(); // Cập nhật lại giao diện
                     return;
                 }
                 // Áp dụng giảm giá
-                const subtotal = parseInt(subtotalElement.textContent.replace(/[^\d]/g, ''));
+                const subtotalText = subtotalElement.textContent.replace(/[^\d]/g, '');
+                const subtotal = parseInt(subtotalText) || 0;
                 let discount = 0;
                 if (coupon.type === 'percent') {
                     discount = Math.round(subtotal * coupon.discount / 100);
-                } else if (coupon.type === 'amount') {
+                } else if (coupon.type === 'fixed') {
                     discount = coupon.discount;
                 }
-                appliedCoupon = { code: coupon.code, discount, type: coupon.type };
+
+                appliedCoupon = {
+                    code: coupon.code,
+                    discount: discount,
+                    type: coupon.type,
+                    percentValue: coupon.type === 'percent' ? coupon.discount : null
+                };
                 localStorage.setItem('appliedCoupon', JSON.stringify(appliedCoupon));
-                updateDiscountDisplay(discount, coupon.code);
+
+                updateOrderSummary();
                 Swal.fire('Thành công', `Áp dụng mã ${coupon.code} thành công!`, 'success');
             });
         }
 
-        function updateDiscountDisplay(discount, code) {
-            discountElement.textContent = formatPrice(discount);
-            // Cập nhật lại tổng tiền
-            const subtotal = parseInt(subtotalElement.textContent.replace(/[^\d]/g, ''));
-            const total = subtotal - discount;
-            totalElement.textContent = formatPrice(total);
-            // Hiển thị mã giảm giá nếu muốn
-            // document.querySelector('.promo-code h3').textContent = code ? `Mã giảm giá (${code})` : 'Mã giảm giá';
-        }
+        // Xóa hàm updateDiscountDisplay cũ vì đã có updateOrderSummary
 
-        document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('DOMContentLoaded', function () {
             orderSummaryList = document.querySelector('.order-summary-list');
             subtotalElement = document.querySelector('.subtotal');
             shippingElement = document.querySelector('.shipping');
-            discountElement = document.querySelector('.discount');
             totalElement = document.querySelector('.total-amount');
             const checkoutButton = document.querySelector('.checkout-button');
 
@@ -756,15 +939,22 @@
 
             // Payment method selection
             document.querySelectorAll('.payment-method').forEach(method => {
-                method.addEventListener('click', function() {
-                    document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+                method.addEventListener('click', function () {
+                    document.querySelectorAll('.payment-method').forEach(m => {
+                        m.classList.remove('selected');
+                        m.querySelector('.check-icon').style.display = 'none';
+                    });
                     this.classList.add('selected');
+                    this.querySelector('.check-icon').style.display = 'block';
+
+                    // Update UI Total based on new method
+                    updateOrderSummary();
                 });
             });
 
             // Shipping option selection
             document.querySelectorAll('.shipping-option').forEach(option => {
-                option.addEventListener('click', function() {
+                option.addEventListener('click', function () {
                     document.querySelectorAll('.shipping-option').forEach(o => o.classList.remove('selected'));
                     this.classList.add('selected');
                     this.querySelector('input[type="radio"]').checked = true;
@@ -783,7 +973,7 @@
             });
 
             // Handle VNPay checkout
-            checkoutButton.addEventListener('click', async function(e) {
+            checkoutButton.addEventListener('click', async function (e) {
                 e.preventDefault();
                 const form = document.getElementById('checkoutForm');
                 if (!form.checkValidity()) {
@@ -805,12 +995,49 @@
                 });
 
                 const cart = JSON.parse(localStorage.getItem(getCartKey())) || [];
-                const total = parseInt(document.querySelector('.total-amount').textContent.replace(/[^\d]/g, ''));
+                if (cart.length === 0) {
+                    Swal.fire({ title: 'Giỏ hàng trống', text: 'Vui lòng thêm sản phẩm vào giỏ hàng trước khi thanh toán.', icon: 'warning' });
+                    return;
+                }
+
+                const paymentMethodDiv = document.querySelector('.payment-method.selected');
+                const selectedMethod = paymentMethodDiv?.dataset.method || 'vnpay';
+                const isVNPay = selectedMethod === 'vnpay';
+
+                const subtotal = parseInt(subtotalElement.textContent.replace(/[^\d]/g, ''));
+                const shipping = parseInt(shippingElement?.textContent.replace(/[^\d]/g, '') || '0');
+                const couponData = JSON.parse(localStorage.getItem('appliedCoupon')) || null;
+                const vnpayDiscountData = isVNPay ? Math.round(subtotal * 0.1) : 0;
+
+                let couponDiscount = 0;
+                if (couponData) {
+                    if (couponData.type === 'percent' && couponData.percentValue) {
+                        couponDiscount = Math.round(subtotal * couponData.percentValue / 100);
+                    } else {
+                        couponDiscount = couponData.discount || 0;
+                    }
+                }
+
+                const totalDiscount = couponDiscount + vnpayDiscountData;
+                const finalTotal = subtotal + shipping - totalDiscount;
+
+                if (isVNPay && finalTotal < 5000) {
+                    Swal.fire({ title: 'Lỗi thanh toán', text: 'Số tiền thanh toán qua VNPay tối thiểu là 5.000đ. Vui lòng kiểm tra lại đơn hàng.', icon: 'error' });
+                    return;
+                }
+
                 const orderId = 'ORDER_' + Date.now();
                 const orderData = {
                     id: orderId,
                     items: cart,
-                    total: total,
+                    subtotal: subtotal,
+                    shipping: shipping,
+                    total: subtotal + shipping, // Gross total before discounts
+                    vnpayDiscount: vnpayDiscountData,
+                    couponDiscount: couponDiscount,
+                    couponCode: couponData ? couponData.code : null,
+                    discountAmount: totalDiscount, // Total combined discount
+                    finalAmount: finalTotal, // Actual amount to be paid
                     customer: {
                         firstName: document.getElementById('firstName').value,
                         lastName: document.getElementById('lastName').value,
@@ -821,32 +1048,36 @@
                     },
                     status: 'pending',
                     createdAt: new Date().toISOString(),
-                    userId: currentUser ? currentUser.uid : null
+                    userId: currentUser ? currentUser.uid : null,
+                    paymentMethod: selectedMethod === 'vnpay' ? 'VNPay' : 'COD'
                 };
-
-                // Khi đặt hàng, lưu mã giảm giá và số tiền giảm vào orderData
-                const couponData = JSON.parse(localStorage.getItem('appliedCoupon')) || null;
-                if (couponData) {
-                    orderData.coupon = couponData.code;
-                    orderData.discountAmount = couponData.discount;
-                }
 
                 firebase.database().ref('orders/' + orderId).set(orderData)
                     .then(async () => {
                         Swal.close();
                         localStorage.removeItem(getCartKey());
-                        const paymentMethodDiv = document.querySelector('.payment-method.selected');
-                        let isVNPay = false;
-                        if (paymentMethodDiv && paymentMethodDiv.textContent.includes('VNPay')) {
-                            isVNPay = true;
-                        }
+                        localStorage.removeItem('appliedCoupon');
+
                         if (isVNPay) {
                             await processVNPayPayment(orderData, orderId);
                             return;
                         }
+
+                        // Save to invoices for COD orders so it shows in member history
+                        const invoiceData = {
+                            ...orderData,
+                            orderKey: orderId, // Use orderId as the invoice key for COD
+                            vnp_PayDate: 'COD', // Indicate it's COD
+                            createdAt: orderData.createdAt
+                        };
+                        await firebase.database().ref('invoices/' + orderId).set(invoiceData);
+
+                        // Deduct stock for COD order
+                        await deductStock(cart);
+
                         Swal.fire({
-                            title: 'Đặt hàng thành công!',
-                            text: 'Cảm ơn bạn đã mua hàng. Đơn hàng của bạn đã được xác nhận.',
+                            title: 'Bạn đã đặt hàng thành công!',
+                            text: 'Cảm ơn bạn đã đặt hàng.',
                             icon: 'success',
                             confirmButtonText: 'OK',
                             confirmButtonColor: '#FF6B00'
@@ -866,13 +1097,16 @@
                     });
             });
 
+            // Xóa mã giảm giá đã lưu cũ (nếu có) khi mới vào trang để bắt đầu mới
+            localStorage.removeItem('appliedCoupon');
+
             // Load cart items on page load
             displayCartItems();
-            setupCouponInput(); // Đảm bảo gọi hàm này khi trang vừa load
+            setupCouponInput();
         });
 
         // Listen for storage events to sync cart across tabs
-        window.addEventListener('storage', function(e) {
+        window.addEventListener('storage', function (e) {
             if (e.key === getCartKey()) {
                 displayCartItems();
             }
@@ -881,7 +1115,7 @@
         let currentUser = null;
         let userData = null;
         // Lấy thông tin user từ Firebase khi đã đăng nhập
-        firebase.auth().onAuthStateChanged(async function(user) {
+        firebase.auth().onAuthStateChanged(async function (user) {
             currentUser = user;
             if (user) {
                 // Lấy thông tin user từ Realtime Database
@@ -906,9 +1140,11 @@
 
         // === VNPay Integration ===
         async function processVNPayPayment(order, orderId) {
-            const vnp_TmnCode = "AEDW20LM";
-            const vnp_HashSecret = "4ZD0IYFHDFXDYGBZJ4NMP5TXJAKFBW1H";
+            // Sử dụng tài khoản VNPay Sandbox public (không bị lỗi chặn Website)
+            const vnp_TmnCode = "CGXZLS0Z";
+            const vnp_HashSecret = "XNBCJFAKAZQSGTARRLGCHVZWCIOIGSHN";
             const vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+
             const vnp_ReturnUrl = window.location.origin + "/vnpay_return.html";
 
             // Lấy địa chỉ IP của người dùng
@@ -937,21 +1173,22 @@
                 vnp_TxnRef: txnRef,
                 vnp_OrderInfo: `Thanh toan don hang ${txnRef}`,
                 vnp_OrderType: 'other',
-                vnp_Amount: Math.round(order.total * 100),
+                vnp_Amount: Math.round(order.finalAmount * 100),
                 vnp_ReturnUrl: vnp_ReturnUrl,
                 vnp_IpAddr: await getClientIp(),
-                vnp_CreateDate: moment().format('YYYYMMDDHHmmss')
+                vnp_CreateDate: moment().format('YYYYMMDDHHmmss'),
+                vnp_BankCode: 'VNBANK' // Bắt buộc chuyển thẳng sang giao diện chọn Thẻ ATM/Tài khoản ngân hàng
             };
 
             // Lưu mapping giữa txnRef và orderId
             localStorage.setItem('pendingOrderKey', orderId);
             localStorage.setItem('vnpayTxnRef', txnRef);
-            
+
             // Lưu thêm vào Firebase để backup
             try {
                 await firebase.database().ref('vnpay_transactions/' + txnRef).set({
                     orderKey: orderId,
-                    amount: order.total,
+                    amount: order.finalAmount,
                     createdAt: new Date().toISOString(),
                     status: 'pending'
                 });
@@ -960,16 +1197,18 @@
                 console.error('Error saving VNPAY mapping:', error);
             }
 
-            // Sắp xếp tham số
-            const sortedParams = Object.keys(vnp_Params).sort().reduce((acc, key) => {
-                acc[key] = vnp_Params[key];
-                return acc;
-            }, {});
-
-            // Tạo chuỗi ký tự cần mã hóa
-            const signData = Object.keys(sortedParams)
-                .map(key => `${key}=${encodeURIComponent(sortedParams[key]).replace(/%20/g, '+')}`)
-                .join('&');
+            // Sắp xếp tham số và chuẩn bị chuỗi HashData
+            let signDataArr = [];
+            let sortedKeys = Object.keys(vnp_Params).sort();
+            for (let i = 0; i < sortedKeys.length; i++) {
+                let key = sortedKeys[i];
+                let value = vnp_Params[key];
+                if (value !== undefined && value !== null && value !== '') {
+                    // VNPay yêu cầu encodeURIComponent và replace %20 thành +
+                    signDataArr.push(encodeURIComponent(key) + '=' + encodeURIComponent(String(value)).replace(/%20/g, "+"));
+                }
+            }
+            const signData = signDataArr.join('&');
 
             // Debug
             console.log('vnp_Params:', vnp_Params);
@@ -981,13 +1220,8 @@
 
             console.log('vnp_SecureHash:', vnp_SecureHash);
 
-            // Thêm chữ ký vào tham số
-            sortedParams.vnp_SecureHash = vnp_SecureHash;
-
             // Tạo URL thanh toán
-            const paymentUrl = vnp_Url + '?' + Object.keys(sortedParams)
-                .map(key => `${key}=${encodeURIComponent(sortedParams[key]).replace(/%20/g, '+')}`)
-                .join('&');
+            const paymentUrl = vnp_Url + '?' + signData + '&vnp_SecureHash=' + vnp_SecureHash;
 
             console.log('paymentUrl:', paymentUrl);
 
@@ -996,4 +1230,5 @@
         }
     </script>
 </body>
-</html> 
+
+</html>

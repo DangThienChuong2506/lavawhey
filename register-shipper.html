@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký trở thành Nhân Viên Giao Hàng - LavaWhey</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary-orange: #ff6b00;
+            --secondary-orange: #ff8e3c;
+            --dark-gray: #333;
+            --light-gray: #f8f9fa;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 550px;
+            perspective: 1000px;
+        }
+
+        .register-card {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-header {
+            padding: 30px 40px 20px;
+            text-align: center;
+            background: white;
+            z-index: 10;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .logo-box {
+            width: 70px;
+            height: 70px;
+            background: #fff5eb;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: var(--primary-orange);
+            box-shadow: 0 8px 15px rgba(255, 107, 0, 0.1);
+        }
+
+        .register-header h3 {
+            font-weight: 800;
+            color: var(--dark-gray);
+            margin: 0;
+            font-size: 1.75rem;
+            letter-spacing: -0.5px;
+        }
+
+        .register-header p {
+            color: #777;
+            margin-top: 8px;
+            font-size: 0.95rem;
+        }
+
+        /* Scrollable Area */
+        .register-body {
+            padding: 20px 40px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Customize scrollbar */
+        .register-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .register-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .register-body::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 10px;
+        }
+
+        .register-body::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-orange);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-control {
+            border-radius: 12px;
+            padding: 12px 16px;
+            border: 1.5px solid #eee;
+            transition: all 0.3s;
+            font-size: 0.95rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.1);
+            outline: none;
+        }
+
+        .input-group-custom {
+            margin-bottom: 20px;
+        }
+
+        .upload-section {
+            background: #fcfcfc;
+            border: 2px dashed #eee;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .upload-section:hover {
+            border-color: var(--primary-orange);
+            background: #fffaf5;
+        }
+
+        .preview-box {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .preview-box img {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .preview-box img:hover {
+            transform: scale(1.05);
+        }
+
+        .register-footer {
+            padding: 20px 40px 30px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .btn-register {
+            background: var(--primary-orange);
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            width: 100%;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.2);
+        }
+
+        .btn-register:hover {
+            background: #e66000;
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px rgba(255, 107, 0, 0.3);
+            color: white;
+        }
+
+        .btn-register:active {
+            transform: translateY(0);
+        }
+
+        .links-area {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .link-item {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .link-item:hover {
+            color: var(--primary-orange);
+        }
+
+        .divider {
+            margin: 0 10px;
+            color: #ddd;
+        }
+
+        @media (max-width: 600px) {
+            .register-card {
+                max-height: 95vh;
+                padding: 0;
+            }
+
+            .register-header,
+            .register-body,
+            .register-footer {
+                padding-left: 25px;
+                padding-right: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <div class="logo-box">
+                    <span class="material-icons" style="font-size: 32px;">delivery_dining</span>
+                </div>
+                <h3>Đăng ký Shipper</h3>
+                <p>Tham gia mạng lưới giao hàng chuyên nghiệp</p>
+            </div>
+
+            <div class="register-body">
+                <form id="shipperRegisterForm">
+                    <div class="input-group-custom">
+                        <label for="name" class="form-label"><span class="material-icons"
+                                style="font-size: 18px;">person</span> Họ tên *</label>
+                        <input type="text" class="form-control" id="name" required placeholder="Nguyễn Văn A">
+                    </div>
+
+                    <div class="input-group-custom">
+                        <label for="email" class="form-label"><span class="material-icons"
+                                style="font-size: 18px;">email</span> Email *</label>
+                        <input type="email" class="form-control" id="email" required placeholder="example@gmail.com">
+                    </div>
+
+                    <div class="input-group-custom">
+                        <label for="phone" class="form-label"><span class="material-icons"
+                                style="font-size: 18px;">phone</span> Số điện thoại *</label>
+                        <input type="tel" class="form-control" id="phone" required placeholder="0901234567">
+                    </div>
+
+                    <div class="input-group-custom">
+                        <label for="cccd" class="form-label"><span class="material-icons"
+                                style="font-size: 18px;">badge</span> Số CCCD *</label>
+                        <input type="text" class="form-control" id="cccd" required placeholder="Nhập 12 số CCCD">
+                    </div>
+
+                    <div class="input-group-custom">
+                        <label for="area" class="form-label"><span class="material-icons"
+                                style="font-size: 18px;">location_on</span> Khu vực / Biển số *</label>
+                        <input type="text" class="form-control" id="area" required placeholder="Quận 1, 59X1-12345">
+                    </div>
+
+                    <div class="upload-section">
+                        <label for="faceImageFile" class="form-label"><span class="material-icons"
+                                style="font-size: 18px;">face</span> Ảnh chân dung *</label>
+                        <input type="file" class="form-control" id="faceImageFile" accept="image/*" required>
+                        <div id="faceImagePreview" class="preview-box" style="display:none">
+                            <img src="" style="width:100px; border-radius:12px; border: 2px solid white;">
+                        </div>
+                    </div>
+
+                    <div class="upload-section">
+                        <label for="idCardFrontFile" class="form-label"><span class="material-icons"
+                                style="font-size: 18px;">contact_page</span> Ảnh CCCD mặt trước *</label>
+                        <input type="file" class="form-control" id="idCardFrontFile" accept="image/*" required>
+                        <div id="idCardFrontPreview" class="preview-box" style="display:none">
+                            <img src=""
+                                style="width:100%; max-width:220px; border-radius:12px; border: 2px solid white;">
+                        </div>
+                    </div>
+
+                    <div class="upload-section">
+                        <label for="avatarFile" class="form-label"><span class="material-icons"
+                                style="font-size: 18px;">account_circle</span> Ảnh đại diện app (Tùy chọn)</label>
+                        <input type="file" class="form-control" id="avatarFile" accept="image/*">
+                        <div id="avatarPreview" class="preview-box" style="display:none">
+                            <img src=""
+                                style="width:80px; height:80px; object-fit:cover; border-radius:50%; border: 3px solid white;">
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="register-footer">
+                <button type="submit" form="shipperRegisterForm" class="btn btn-register">
+                    <span>Gửi Đăng Ký Đối Tác</span>
+                    <span class="material-icons">send</span>
+                </button>
+
+                <div class="links-area">
+                    <a href="shipper.html" class="link-item">
+                        <span class="material-icons" style="font-size: 18px;">login</span> Đăng nhập
+                    </a>
+                    <span class="divider">|</span>
+                    <a href="index.html" class="link-item">
+                        <span class="material-icons" style="font-size: 18px;">home</span> Trang chủ
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+    <!-- Thư viện hỗ trợ -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPdSUkT56drPQGE9N4KvjM3ZoQaeamdao",
+            authDomain: "lavawhey.firebaseapp.com",
+            databaseURL: "https://lavawhey-default-rtdb.firebaseio.com",
+            projectId: "lavawhey",
+            storageBucket: "lavawhey.firebasestorage.app",
+            messagingSenderId: "261576736130",
+            appId: "1:261576736130:web:9d8b878a50e01c9591a39b",
+            measurementId: "G-BR9VJHPJGL"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+        const auth = firebase.auth();
+
+        // Helper to convert file to Base64
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+        }
+
+        // Live previews
+        function setupPreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            input.addEventListener('change', function (e) {
+                const file = e.target.files[0];
+                const previewDiv = document.getElementById(previewId);
+                const previewImg = previewDiv.querySelector('img');
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        previewImg.src = e.target.result;
+                        previewDiv.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    previewDiv.style.display = 'none';
+                }
+            });
+        }
+
+        setupPreview('faceImageFile', 'faceImagePreview');
+        setupPreview('idCardFrontFile', 'idCardFrontPreview');
+        setupPreview('avatarFile', 'avatarPreview');
+
+        document.getElementById('shipperRegisterForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const cccd = document.getElementById('cccd').value.trim();
+            const area = document.getElementById('area').value.trim();
+
+            const faceImageFile = document.getElementById('faceImageFile').files[0];
+            const idCardFrontFile = document.getElementById('idCardFrontFile').files[0];
+            const avatarFile = document.getElementById('avatarFile').files[0];
+
+            // Validate mandatory fields
+            if (!name || !email || !phone || !cccd || !area || !faceImageFile || !idCardFrontFile) {
+                return Swal.fire('Lỗi', 'Vui lòng điền đầy đủ tất cả các trường bắt buộc (*)', 'error');
+            }
+
+            try {
+                Swal.fire({
+                    title: 'Đang tải ảnh và xử lý...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // Check redundant
+                let duplicate = false;
+                try {
+                    const snap = await db.ref('shippers').once('value');
+                    const shippers = snap.val() || {};
+                    duplicate = Object.values(shippers).find(s => s.email === email || s.phone === phone || s.cccd === cccd);
+                } catch (readErr) {
+                    console.warn("Lỗi kiểm tra trùng lặp: ", readErr);
+                }
+
+                if (duplicate) {
+                    return Swal.fire('Lỗi', 'Email, Số điện thoại hoặc Số CCCD đã được đăng ký!', 'error');
+                }
+
+                // Convert images to Base64
+                const faceImageBase64 = await fileToBase64(faceImageFile);
+                const idCardFrontBase64 = await fileToBase64(idCardFrontFile);
+                let avatarBase64 = "";
+                if (avatarFile) {
+                    avatarBase64 = await fileToBase64(avatarFile);
+                }
+
+                const newShipperId = 'SP' + Date.now();
+
+                await db.ref('shippers/' + newShipperId).set({
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    cccd: cccd,
+                    area: area,
+                    faceImage: faceImageBase64,
+                    idCardFront: idCardFrontBase64,
+                    image: avatarBase64,
+                    status: 'Chờ xác nhận',
+                    createdAt: new Date().toISOString()
+                });
+
+                Swal.fire('Thành công', 'Đăng ký thành công! Vui lòng chờ Quản trị viên phê duyệt.', 'success').then(() => {
+                    window.location.href = 'index.html';
+                });
+
+            } catch (err) {
+                console.error("Registration error:", err);
+                Swal.fire('Lỗi', 'Đã có lỗi xảy ra: ' + err.message, 'error');
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+{
+  "rules": {
+    ".read": true,
+    ".write": "auth != null",
+    "shippers": {
+      ".read": true,
+      ".write": true
+    },
+    "users": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": "auth != null && auth.uid === $uid",
+        "email": {
+          ".validate": "newData.isString()"
+        },
+        "displayName": {
+          ".validate": "newData.isString()"
+        },
+        "loginHistory": {
+          "$timestamp": {
+            ".validate": "newData.hasChildren(['method', 'success'])"
+          }
+        },
+        "$other": {
+          ".validate": true
+        }
+      }
+    },
+    "failedLogins": {
+      ".read": "auth != null",
+      ".write": true,
+      "$pushId": {
+        ".validate": "newData.hasChildren(['email', 'timestamp', 'error'])"
+      }
+    },
+    "categories": {
+      ".read": true,
+      ".indexOn": [
+        "id",
+        "name"
+      ],
+      "$category_id": {
+        ".read": true,
+        "products": {
+          ".read": true,
+          "$product_id": {
+            ".read": true
+          }
+        }
+      }
+    },
+    "orders": {
+      "$orderId": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "invoices": {
+      "$txnRef": {
+        ".read": true,
+        ".write": true
+      }
+    }
+  }
+}

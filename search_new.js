@@ -1,3 +1,11 @@
+
+// Add safe image checker 
+function getSafeImage(url) {
+    if(!url) return 'https://via.placeholder.com/200x200?text=No+Image';
+    if(url.includes('th.bing.com')) return 'https://suckhoehangngay.mediacdn.vn/thumb_w/600/154880486097817600/2020/8/10/20190829063758523105whey-protein-la-gimax-800x800-15970551551471580098420-0-25-468-774-crop-1597055170642656384816.png';
+    return url;
+}
+
 // Cache cho dữ liệu categories
 let cachedCategories = null;
 
@@ -115,7 +123,7 @@ function khoiTaoTimKiem() {
                         <h3>${sp.categoryName}</h3>
                     </div>
                     <div class="product-details">
-                        <img src="${sp.image}" alt="${sp.name}" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
+                        <img src="${getSafeImage(sp.image)}" alt="${sp.name}" onerror="this.src='https://via.placeholder.com/80x80?text=No+Image'">
                         <div class="search-item-info">
                             <h4>${sp.name}</h4>
                             <p>${sp.description || 'Không có mô tả'}</p>
