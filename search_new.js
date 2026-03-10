@@ -1,8 +1,8 @@
 
 // Add safe image checker 
 function getSafeImage(url) {
-    if(!url) return 'https://via.placeholder.com/200x200?text=No+Image';
-    if(url.includes('th.bing.com')) return 'https://suckhoehangngay.mediacdn.vn/thumb_w/600/154880486097817600/2020/8/10/20190829063758523105whey-protein-la-gimax-800x800-15970551551471580098420-0-25-468-774-crop-1597055170642656384816.png';
+    if (!url) return 'https://via.placeholder.com/200x200?text=No+Image';
+    if (url.includes('th.bing.com')) return 'https://suckhoehangngay.mediacdn.vn/thumb_w/600/154880486097817600/2020/8/10/20190829063758523105whey-protein-la-gimax-800x800-15970551551471580098420-0-25-468-774-crop-1597055170642656384816.png';
     return url;
 }
 
@@ -38,7 +38,7 @@ function timKiemSanPham(categories, tuKhoa) {
     }
     tuKhoa = tuKhoa.toLowerCase();
     let ketQua = [];
-    
+
     categories.forEach(danhMuc => {
         if (danhMuc && danhMuc.products && Array.isArray(danhMuc.products)) {
             // Tìm kiếm trong sản phẩm của danh mục
@@ -62,7 +62,7 @@ function timKiemSanPham(categories, tuKhoa) {
                     }
                 }
             });
-            
+
             // Tìm theo tên danh mục
             if (danhMuc.name && danhMuc.name.toLowerCase().includes(tuKhoa)) {
                 danhMuc.products.forEach(sanPham => {
@@ -77,7 +77,7 @@ function timKiemSanPham(categories, tuKhoa) {
             }
         }
     });
-    
+
     return ketQua;
 }
 
@@ -94,10 +94,17 @@ function khoiTaoTimKiem() {
     // Tải dữ liệu categories khi trang load
     layDuLieuCategories();
 
+    // Hiển thị từ khóa tìm kiếm từ URL (nếu có)
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('search');
+    if (query) {
+        searchInput.value = query;
+    }
+
     // Xử lý sự kiện input
-    searchInput.addEventListener('input', async function(e) {
+    searchInput.addEventListener('input', async function (e) {
         const tuKhoa = e.target.value.trim();
-        
+
         // Ẩn kết quả nếu input rỗng
         if (!tuKhoa) {
             searchResults.style.display = 'none';
@@ -114,7 +121,7 @@ function khoiTaoTimKiem() {
 
         // Tìm kiếm sản phẩm
         const ketQua = timKiemSanPham(categories, tuKhoa);
-        
+
         // Hiển thị kết quả
         if (ketQua.length > 0) {
             searchResults.innerHTML = ketQua.map(sp => `
@@ -139,10 +146,10 @@ function khoiTaoTimKiem() {
 
         // Thêm event listeners cho các kết quả tìm kiếm
         document.querySelectorAll('.search-item').forEach(item => {
-            item.addEventListener('click', function() {
+            item.addEventListener('click', function () {
                 const categoryId = this.dataset.category;
                 const productId = this.dataset.product;
-                
+
                 // Lưu thông tin chi tiết vào sessionStorage để sử dụng sau khi chuyển trang
                 const danhMucChua = categories.find(dm => dm.id === categoryId);
                 sessionStorage.setItem('scrollTarget', JSON.stringify({
@@ -161,8 +168,28 @@ function khoiTaoTimKiem() {
         });
     });
 
+    // Thêm chức năng cho nút tìm kiếm và phím Enter
+    const searchButton = document.querySelector('.search-button');
+    if (searchButton) {
+        searchButton.addEventListener('click', function () {
+            const tuKhoa = searchInput.value.trim();
+            if (tuKhoa) {
+                window.location.href = `products.html?search=${encodeURIComponent(tuKhoa)}`;
+            }
+        });
+    }
+
+    searchInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            const tuKhoa = searchInput.value.trim();
+            if (tuKhoa) {
+                window.location.href = `products.html?search=${encodeURIComponent(tuKhoa)}`;
+            }
+        }
+    });
+
     // Ẩn kết quả khi click ra ngoài
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', function (e) {
         if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
             searchResults.style.display = 'none';
         }

@@ -1803,70 +1803,112 @@
         }
 
         .price-range {
-            padding: 5px 0;
+            padding: 10px 0;
+        }
+
+        .price-quick-select {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .price-btn {
+            flex: 1;
+            min-width: calc(50% - 4px);
+            padding: 8px 10px;
+            border: 1px solid rgba(255, 107, 0, 0.2);
+            border-radius: 8px;
+            background: #fff;
+            color: #444;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .price-btn:hover {
+            border-color: var(--primary-color);
+            background: rgba(255, 107, 0, 0.05);
+            color: var(--primary-color);
+        }
+
+        .price-btn.active {
+            background: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
         }
 
         .price-inputs {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-            font-size: 0.85rem;
-            font-weight: 500;
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 1px dashed rgba(255, 107, 0, 0.3);
+        }
+
+        .price-val {
+            font-size: 0.95rem;
+            font-weight: 700;
             color: var(--primary-color);
         }
 
         .price-separator {
-            color: #999;
+            color: #ccc;
+            font-weight: 300;
         }
 
         .range-sliders {
             position: relative;
-            height: 20px;
+            height: 30px;
+            padding: 10px 0;
+            margin-top: 5px;
         }
 
         .range-sliders input[type="range"] {
             position: absolute;
             width: 100%;
             height: 6px;
+            top: 12px;
             background: transparent;
             pointer-events: none;
             -webkit-appearance: none;
             appearance: none;
+            z-index: 2;
         }
 
         .range-sliders input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 18px;
-            height: 18px;
-            background: var(--primary-color);
+            width: 22px;
+            height: 22px;
+            background: #fff;
+            border: 3px solid var(--primary-color);
             border-radius: 50%;
             cursor: pointer;
             pointer-events: all;
-            box-shadow: 0 2px 6px rgba(255, 107, 0, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease;
         }
 
-        .range-sliders input[type="range"]::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            background: var(--primary-color);
-            border-radius: 50%;
-            cursor: pointer;
-            pointer-events: all;
-            border: none;
-            box-shadow: 0 2px 6px rgba(255, 107, 0, 0.3);
+        .range-sliders input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
         }
 
         .slider-track {
             position: absolute;
-            top: 7px;
+            top: 19px;
             left: 0;
             right: 0;
             height: 6px;
-            background: #eee;
-            border-radius: 3px;
-            overflow: hidden;
+            background: #e9ecef;
+            border-radius: 10px;
+            z-index: 1;
         }
 
         .slider-track::before {
@@ -1876,7 +1918,7 @@
             left: var(--range-min, 0%);
             right: calc(100% - var(--range-max, 100%));
             height: 100%;
-            background: #FF6B00;
+            background: linear-gradient(90deg, #FF6B00, #FF9500);
             border-radius: inherit;
         }
 
@@ -3079,17 +3121,23 @@
                     
                     <!-- Giá -->
                     <div class="filter-group">
-                        <label class="filter-label">Khoảng giá:</label>
+                        <label class="filter-label"><i class="fas fa-tags me-2"></i>Khoảng giá:</label>
                         <div class="price-range">
+                            <div class="price-quick-select">
+                                <button class="price-btn" data-min="0" data-max="500000">Dưới 500k</button>
+                                <button class="price-btn" data-min="500000" data-max="1000000">500k - 1tr</button>
+                                <button class="price-btn" data-min="1000000" data-max="2000000">1tr - 2tr</button>
+                                <button class="price-btn" data-min="2000000" data-max="10000000">Trên 2tr</button>
+                            </div>
                             <div class="price-inputs">
-                                <span id="minPriceValue">500.000đ</span>
-                                <span class="price-separator">-</span>
-                                <span id="maxPriceValue">2.000.000đ</span>
+                                <span id="minPriceValue" class="price-val">0đ</span>
+                                <span class="price-separator">―</span>
+                                <span id="maxPriceValue" class="price-val">5.000.000đ</span>
                             </div>
                             <div class="range-sliders">
-                                <input type="range" id="minPriceRange" min="500000" max="2000000" step="50000" value="500000">
-                                <input type="range" id="maxPriceRange" min="500000" max="2000000" step="50000" value="2000000">
-                                <div class="slider-track" id="sliderTrack"></div>
+                                <input type="range" id="minPriceRange" min="0" max="5000000" step="50000" value="0">
+                                <input type="range" id="maxPriceRange" min="0" max="5000000" step="50000" value="5000000">
+                                <div class="slider-track" id="sliderTrack" style="--range-min: 0%; --range-max: 100%;"></div>
                             </div>
                         </div>
                     </div>
@@ -3471,8 +3519,21 @@
                             categorySection.innerHTML = `
                                 <h2>${category.name}</h2>
                                 <div class="product-row">
-                                    ${products.map(product => `
-                                        <div class="product-card ${product.stock <= 0 ? 'out-of-stock' : ''}" data-id="${product.id}">
+                                    ${products.map(product => {
+                                        const searchInfo = [
+                                            product.name,
+                                            product.description || '',
+                                            product.brand || 'LavaWhey',
+                                            product.origin || 'Việt Nam',
+                                            product.packaging || '',
+                                            category.name || ''
+                                        ].join(' ').toLowerCase();
+
+                                        return `
+                                        <div class="product-card ${product.stock <= 0 ? 'out-of-stock' : ''}" 
+                                             data-id="${product.id}" 
+                                             data-price="${product.price}"
+                                             data-search-full="${searchInfo.replace(/"/g, '&quot;')}">
                                             <img data-image-raw="${(product.image || '').toString().replace(/"/g, '&quot;')}" src="${getSafeImage(product.image)}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'">
                                             <h3>${product.name}</h3>
                                             <p class="description">${product.description || 'Không có mô tả'}</p>
@@ -3485,7 +3546,7 @@
                                                 <button class="btn-buy-now" type="button" data-action="buy-now" ${product.stock <= 0 ? 'disabled style="background:#ccc;cursor:not-allowed;"' : ''}>${product.stock > 0 ? 'Mua ngay' : 'Hết hàng'}</button>
                                             </div>
                                         </div>
-                                    `).join('')}
+                                    `;}).join('')}
                                 </div>
                             `;
 
@@ -3512,6 +3573,7 @@
                     // Áp dụng bộ lọc từ URL nếu có
                     const urlParams = new URLSearchParams(window.location.search);
                     const idsParam = urlParams.get('ids');
+                    const searchParam = urlParams.get('search');
                     
                     if (idsParam) {
                         const ids = idsParam.split(',');
@@ -3543,8 +3605,12 @@
                         if (typeof handleSearchNavigation === 'function') {
                             handleSearchNavigation();
                         }
+                    } else if (searchParam && typeof applySmartFilter === 'function') {
+                        // Nếu có tham số search, ưu tiên áp dụng bộ lọc thông minh
+                        window.currentFilters.search = searchParam;
+                        applySmartFilter();
                     } else if (typeof applyCategoryFilter === 'function') {
-                        // Nếu không có ids, áp dụng bộ lọc mặc định
+                        // Nếu không có ids/search, áp dụng bộ lọc mặc định
                         applyCategoryFilter();
                     }
 

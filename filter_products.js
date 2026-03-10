@@ -10,8 +10,8 @@ function getSafeImage(url) {
 window.currentFilters = {
     category: 'all',
     goal: null,
-    minPrice: 500000,
-    maxPrice: 2000000,
+    minPrice: 0,
+    maxPrice: 5000000,
     search: ''
 };
 
@@ -62,8 +62,8 @@ function formatPrice(price) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(number || 0);
 }
 
-const DEFAULT_MIN_PRICE = 500000;
-const DEFAULT_MAX_PRICE = 2000000;
+const DEFAULT_MIN_PRICE = 0;
+const DEFAULT_MAX_PRICE = 5000000;
 
 function setSidebarActiveCategory(categoryId) {
     document.querySelectorAll('.category-list a').forEach(a => a.classList.remove('active'));
@@ -103,32 +103,16 @@ async function applySmartFilter() {
             const productCards = categoryElement.querySelectorAll('.product-card');
             const categoryTitle = (categoryElement.querySelector('h2')?.textContent || '').toLowerCase();
 
-            let categoryMatchesGoal = true;
-            if (goal === 'muscle') {
-                // Whey Protein + Vitamin & Khoáng chất
-                categoryMatchesGoal =
-                    categoryTitle.includes('whey') ||
-                    categoryTitle.includes('vitamin') ||
-                    categoryTitle.includes('khoáng');
-            } else if (goal === 'fat-loss') {
-                // Sản phẩm giảm cân
-                categoryMatchesGoal =
-                    categoryTitle.includes('giảm cân') ||
-                    categoryTitle.includes('giảm mỡ') ||
-                    categoryTitle.includes('weight loss') ||
-                    categoryTitle.includes('fat loss');
-            } else if (goal === 'endurance') {
-                // BCAA + Pre-workout
-                categoryMatchesGoal =
-                    categoryTitle.includes('bcaa') ||
-                    categoryTitle.includes('pre-workout') ||
-                    categoryTitle.includes('pre workout');
-            }
-
-            // Nếu có goal mà danh mục không thuộc nhóm mục tiêu thì ẩn cả danh mục
-            if (goal && smartActive && !categoryMatchesGoal) {
-                categoryElement.style.display = 'none';
-                return;
+            // Chế độ goal filter
+            let goalMatchCategory = true;
+            if (goal) {
+                if (goal === 'muscle') {
+                    goalMatchCategory = categoryTitle.includes('whey') || categoryTitle.includes('vitamin') || categoryTitle.includes('khoáng');
+                } else if (goal === 'fat-loss') {
+                    goalMatchCategory = categoryTitle.includes('giảm cân') || categoryTitle.includes('giảm mỡ');
+                } else if (goal === 'endurance') {
+                    goalMatchCategory = categoryTitle.includes('bcaa') || categoryTitle.includes('pre-workout');
+                }
             }
 
             productCards.forEach(card => {
@@ -136,19 +120,19 @@ async function applySmartFilter() {
                 const pDesc = card.querySelector('.description')?.textContent?.toLowerCase() || '';
                 const pPriceText = card.querySelector('.price')?.textContent || '0';
 
-                // Parse price từ text (ví dụ: "1.500.000đ")
-                const price = parseInt(pPriceText.replace(/[^\d]/g, '')) || 0;
+                // Parse price từ data-attribute hoặc text (fallback)
+                const price = parseInt(card.getAttribute('data-price')) || parseInt(pPriceText.replace(/[^\d]/g, '')) || 0;
 
                 // 1. Lọc Giá
                 const priceMatch = price >= minPrice && price <= maxPrice;
 
                 // 2. Lọc Mục tiêu & Tìm kiếm
-                const fullText = (pName + ' ' + pDesc);
+                const fullText = (card.getAttribute('data-search-full') || (pName + ' ' + pDesc)).toLowerCase();
 
                 let goalMatch = true;
                 if (goal) {
                     // Nếu danh mục đã đúng nhóm mục tiêu thì cho phép toàn bộ sản phẩm trong danh mục
-                    goalMatch = categoryMatchesGoal || GOAL_KEYWORDS[goal].some(kw => fullText.includes(kw));
+                    goalMatch = goalMatchCategory || GOAL_KEYWORDS[goal].some(kw => fullText.includes(kw));
                 }
 
                 const searchMatch = !searchKW || fullText.includes(searchKW);
@@ -265,6 +249,30 @@ function initSmartFilters() {
         };
     });
 
+    // Price Quick Select Buttons
+    document.querySelectorAll('.price-btn').forEach(btn => {
+        btn.onclick = function () {
+            const min = parseInt(this.dataset.min);
+            const max = parseInt(this.dataset.max);
+
+            // Update range inputs
+            const minS = document.getElementById('minPriceRange');
+            const maxS = document.getElementById('maxPriceRange');
+            if (minS && maxS) {
+                minS.value = min;
+                maxS.value = max > minS.max ? minS.max : max;
+
+                // Trigger update UI
+                minS.dispatchEvent(new Event('input'));
+                maxS.dispatchEvent(new Event('input'));
+            }
+
+            // UI active state
+            document.querySelectorAll('.price-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        };
+    });
+
     // Price Sliders
     const minS = document.getElementById('minPriceRange');
     const maxS = document.getElementById('maxPriceRange');
@@ -309,6 +317,20 @@ function initSmartFilters() {
             applyCategoryFilter();
         });
     }
+
+    // Xử lý URL parameters (nếu có search hoặc category)
+    const urlParams = new URLSearchParams(window.location.search);
+    const searchParam = urlParams.get('search');
+    const categoryParam = urlParams.get('category');
+
+    if (searchParam) {
+        window.currentFilters.search = searchParam;
+        applySmartFilter();
+    } else if (categoryParam) {
+        window.currentFilters.category = categoryParam;
+        setSidebarActiveCategory(categoryParam);
+        applyCategoryFilter();
+    }
 }
 
 document.addEventListener('DOMContentLoaded', initSmartFilters);
@@ -323,34 +345,34 @@ function clearAllFilters() {
         maxPrice: DEFAULT_MAX_PRICE,
         search: ''
     };
-    
+
     // Reset UI - Goal buttons
     document.querySelectorAll('.goal-btn').forEach(btn => btn.classList.remove('active'));
-    
+
     // Reset UI - Price sliders
     const minS = document.getElementById('minPriceRange');
     const maxS = document.getElementById('maxPriceRange');
     if (minS) minS.value = DEFAULT_MIN_PRICE;
     if (maxS) maxS.value = DEFAULT_MAX_PRICE;
-    
+
     // Update price display
     const minDisplay = document.getElementById('minPriceValue');
     const maxDisplay = document.getElementById('maxPriceValue');
     if (minDisplay) minDisplay.textContent = formatPrice(DEFAULT_MIN_PRICE);
     if (maxDisplay) maxDisplay.textContent = formatPrice(DEFAULT_MAX_PRICE);
-    
+
     // Reset slider track
     const track = document.getElementById('sliderTrack');
     if (track) {
         track.style.setProperty('--range-min', '0%');
         track.style.setProperty('--range-max', '100%');
     }
-    
+
     // Reset category sidebar
     document.querySelectorAll('.category-list a').forEach(a => a.classList.remove('active'));
     const allLink = document.querySelector('.category-list a[data-category="all"]');
     if (allLink) allLink.classList.add('active');
-    
+
     // Apply filter - dùng applyCategoryFilter để hiện tất cả danh mục và reset sản phẩm
     applyCategoryFilter();
 }

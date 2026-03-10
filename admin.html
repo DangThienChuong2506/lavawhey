@@ -754,21 +754,21 @@
             padding: 0.8rem;
             background: white;
             color: #1e293b;
-            border: none;
-            border-radius: 12px;
-            font-weight: 600;
             font-size: 0.95rem;
-            transition: all 0.2s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.8rem;
+            gap: 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         .btn-google img {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             object-fit: contain;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
         }
 
         .btn-google:hover {
@@ -2243,20 +2243,6 @@
         // Thiết lập Session persistence cho Admin để không đụng chạm đến LocalStorage của tài khoản người dùng bình thường
         auth.setPersistence(firebase.auth.Auth.Persistence.SESSION);
 
-        // Firebase config for Reviews (second database)
-        const reviewFirebaseConfig = {
-            apiKey: "AIzaSyDH5vZpJNZcJ3JVEXxVzqLqF8vR0wZqj4",
-            authDomain: "lavawhey-8a7c6.firebaseapp.com",
-            databaseURL: "https://lavawhey-8a7c6-default-rtdb.firebaseio.com",
-            projectId: "lavawhey-8a7c6",
-            storageBucket: "lavawhey-8a7c6.appspot.com",
-            messagingSenderId: "261576736130",
-            appId: "1:261576736130:web:9d8b878a50e01c9591a39b",
-            measurementId: "G-BR9VJHPJGL"
-        };
-        const reviewApp = firebase.initializeApp(reviewFirebaseConfig, 'reviewsApp');
-        const dbReviews = reviewApp.database();
-
         // DOM Elements
         const loginSection = document.getElementById('login-section');
         const adminContent = document.getElementById('admin-content');
@@ -2379,7 +2365,6 @@
                 // Load partners chỉ khi cần thiết
                 setTimeout(() => {
                     loadPartners();
-                    loadReviews();
                 }, 100);
 
                 // Load revenue stats và inventory khi cần
@@ -2534,142 +2519,7 @@
             }
         });
 
-        // --- REVIEWS MANAGEMENT ---
-        let reviewsTable;
-        async function loadReviews() {
-            try {
-                // Lấy thông tin sản phẩm từ db chính để map productId sang tên sản phẩm
-                const catSnap = await db.ref('categories').once('value');
-                const categories = catSnap.val() || [];
-                const productMap = {};
-                if (Array.isArray(categories)) {
-                    categories.forEach(cat => {
-                        if (cat && cat.products && Array.isArray(cat.products)) {
-                            cat.products.forEach(p => {
-                                if (p && p.id) {
-                                    productMap[p.id] = p.name || p.id;
-                                    // if there are variant level ids, handle them if needed, but normally they are just p.id
-                                }
-                            });
-                        }
-                    });
-                } else if (typeof categories === 'object') {
-                    Object.values(categories).forEach(cat => {
-                        if (cat && cat.products && Array.isArray(cat.products)) {
-                            cat.products.forEach(p => {
-                                if (p && p.id) {
-                                    productMap[p.id] = p.name || p.id;
-                                }
-                            });
-                        }
-                    });
-                }
-
-                const snapshot = await dbReviews.ref('reviews').once('value');
-                const productsReviews = snapshot.val() || {};
-
-                const tbody = document.querySelector('#table-reviews tbody');
-                if (!tbody) return;
-                tbody.innerHTML = '';
-
-                // Hủy DataTable cũ nếu đã tồn tại để tránh lỗi reinitialize
-                if ($.fn.DataTable.isDataTable('#table-reviews')) {
-                    $('#table-reviews').DataTable().clear().destroy();
-                }
-
-                let index = 1;
-                const reviewsArray = [];
-
-                // Lặp qua object products (reviews/productId)
-                Object.entries(productsReviews).forEach(([productId, reviewsObj]) => {
-                    if (reviewsObj && typeof reviewsObj === 'object') {
-                        // Lặp qua các đánh giá của từng sản phẩm (reviews/productId/reviewId)
-                        Object.entries(reviewsObj).forEach(([reviewId, review]) => {
-                            reviewsArray.push({
-                                id: reviewId,
-                                productId: productId,
-                                ...review
-                            });
-                        });
-                    }
-                });
-
-                // Sắp xếp mới nhất lên đầu
-                reviewsArray.sort((a, b) => {
-                    const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
-                    const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
-                    return timeB - timeA;
-                });
-
-                reviewsArray.forEach(review => {
-                    const dateObj = review.createdAt ? new Date(review.createdAt) : null;
-                    const dateStr = dateObj ? `${dateObj.toLocaleDateString('vi-VN')} ${dateObj.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}` : '';
-                    const stars = '⭐'.repeat(review.rating || 0);
-                    const verifiedBadge = review.verified
-                        ? '<span class="badge bg-success">Đã mua</span>'
-                        : '<span class="badge bg-secondary">Chưa xác minh</span>';
-
-                    const productName = productMap[review.productId] || review.productId || 'Sản phẩm không xác định';
-
-                    tbody.innerHTML += `
-                        <tr>
-                            <td>${index++}</td>
-                            <td>
-                                <strong>${productName}</strong>
-                                <div style="font-size:0.8rem;color:#FF6B00;">ID: ${review.productId || 'N/A'}</div>
-                            </td>
-                            <td>
-                                <strong>${review.userName || 'Không tên'}</strong>
-                                <div style="font-size:0.8rem;color:#ccc;">${review.userId || ''}</div>
-                            </td>
-                            <td style="color:#FF6B00;">${stars}</td>
-                            <td><div style="max-width:300px; white-space:normal; overflow:hidden;">${review.comment || ''}</div></td>
-                            <td>${verifiedBadge}</td>
-                            <td>${dateStr}</td>
-                            <td>
-                                <button class="btn btn-sm btn-danger btn-action" onclick="deleteReview('${review.productId}', '${review.id}')" title="Xóa">
-                                    <span class="material-icons" style="font-size:18px;">delete</span>
-                                </button>
-                            </td>
-                        </tr>
-                    `;
-                });
-
-                reviewsTable = $('#table-reviews').DataTable({
-                    language: {
-                        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/vi.json',
-                        emptyTable: "Chưa có đánh giá nào."
-                    },
-                    order: [[0, 'asc']]
-                });
-            } catch (error) {
-                console.error("Error loading reviews:", error);
-            }
-        }
-
-        window.deleteReview = async function (productId, reviewId) {
-            Swal.fire({
-                title: 'Xóa bình luận?',
-                text: 'Hành động này không thể hoàn tác!',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Xóa',
-                cancelButtonText: 'Hủy',
-                confirmButtonColor: '#e3342f'
-            }).then(async (result) => {
-                if (result.isConfirmed) {
-                    try {
-                        Swal.fire({ title: 'Đang xử lý...', allowOutsideClick: false, didOpen: () => { Swal.showLoading() } });
-                        await dbReviews.ref(`reviews/${productId}/${reviewId}`).remove();
-                        Swal.fire('Đã xóa!', 'Bình luận đã bị xóa.', 'success');
-                        loadReviews();
-                    } catch (error) {
-                        console.error('Error deleting review:', error);
-                        Swal.fire('Lỗi', 'Không thể xóa bình luận', 'error');
-                    }
-                }
-            });
-        };
+        // --- AUTHENTICATION ACTIONS ---
 
         // Handle logout
         btnLogout.addEventListener('click', function () {
@@ -2718,8 +2568,7 @@
             partners: 'Đối tác',
             revenue: 'Thống kê doanh thu',
             inventory: 'Nhập hàng',
-            stock: 'Quản lý tồn kho',
-            reviews: 'Đánh giá sản phẩm'
+            stock: 'Quản lý tồn kho'
         };
 
         document.querySelectorAll('.sidebar .nav-link').forEach(link => {
@@ -2734,7 +2583,7 @@
                 const allSections = [
                     'dashboard-section', 'categories-section', 'orders-section', 'stock-section', 'users-section', 'shippers-section',
                     'contacts-section', 'coupons-section', 'news-section', 'partners-section',
-                    'revenue-section', 'inventory-section', 'reviews-section'
+                    'revenue-section', 'inventory-section'
                 ];
 
                 allSections.forEach(secId => {

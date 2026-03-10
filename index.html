@@ -2246,19 +2246,19 @@
     <section class="top-rated-section" id="topRatedSection" style="display:none;">
         <div class="top-rated-header">
             <h2>Sản phẩm được đánh giá cao</h2>
-            <div class="top-rated-nav" aria-label="Điều hướng sản phẩm được đánh giá cao">
-                <button id="topRatedPrev" class="top-rated-nav-btn" type="button" aria-label="Xem sản phẩm trước">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-                <button id="topRatedNext" class="top-rated-nav-btn" type="button" aria-label="Xem sản phẩm tiếp theo">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
         </div>
-        <div class="top-rated-slider-wrapper">
-            <div id="topRatedGrid">
-                <!-- Top rated products will be loaded here -->
+        <div class="top-rated-carousel-wrapper">
+            <button id="topRatedPrev" class="carousel-btn prev" type="button" aria-label="Xem sản phẩm trước">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="top-rated-grid-container">
+                <div id="topRatedGrid" class="top-rated-grid">
+                    <!-- Top rated products will be loaded here -->
+                </div>
             </div>
+            <button id="topRatedNext" class="carousel-btn next" type="button" aria-label="Xem sản phẩm tiếp theo">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
     </section>
 
@@ -3766,17 +3766,21 @@
                     grid.innerHTML = '<div style="text-align:center;width:100%">Chưa có sản phẩm</div>';
                     return;
                 }
-                // Lấy mỗi loại 1 sản phẩm đầu tiên
+                // Lấy sản phẩm nổi bật (6 cái)
                 const featured = [];
-                categories.forEach(cat => {
-                    if (cat.products && cat.products.length > 0) {
-                        featured.push({
-                            ...cat.products[0],
-                            category: cat.name,
-                            categoryId: cat.id
-                        });
+                for (const cat of categories) {
+                    if (cat.products && Array.isArray(cat.products)) {
+                        for (const product of cat.products) {
+                            featured.push({
+                                ...product,
+                                category: cat.name,
+                                categoryId: cat.id
+                            });
+                            if (featured.length >= 6) break;
+                        }
                     }
-                });
+                    if (featured.length >= 6) break;
+                }
                 grid.innerHTML = '';
                 featured.forEach(product => {
                     const card = document.createElement('div');
