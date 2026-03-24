@@ -742,7 +742,12 @@
                 orderSummaryList.innerHTML = '<div style="text-align:center;color:#999;padding:20px 0;">Giỏ hàng của bạn đang trống</div>';
                 subtotalElement.textContent = formatPrice(0);
                 if (shippingElement) shippingElement.parentElement.style.display = 'none';
-                discountElement.textContent = formatPrice(0);
+                
+                const vnpayRow = document.getElementById('vnpayDiscountRow');
+                const couponRow = document.getElementById('couponDiscountRow');
+                if (vnpayRow) vnpayRow.style.display = 'none';
+                if (couponRow) couponRow.style.display = 'none';
+                
                 totalElement.textContent = formatPrice(0);
                 return;
             }
@@ -929,12 +934,8 @@
                     const shippingCost = this.querySelector('.shipping-option-price').textContent;
                     shippingElement.textContent = shippingCost;
 
-                    // Recalculate total
-                    const subtotal = parseInt(subtotalElement.textContent.replace(/[^\d]/g, ''));
-                    const shipping = parseInt(shippingCost.replace(/[^\d]/g, ''));
-                    const discount = parseInt(discountElement.textContent.replace(/[^\d]/g, ''));
-                    const total = subtotal + shipping - discount;
-                    totalElement.textContent = formatPrice(total);
+                    // Recalculate total using the unified function
+                    updateOrderSummary();
                 });
             });
 
@@ -946,7 +947,8 @@
                     Swal.fire({ title: 'Lỗi!', text: 'Vui lòng điền đầy đủ thông tin.', icon: 'error' });
                     return;
                 }
-                if (!currentUser) {
+                const activeUser = firebase.auth().currentUser;
+                if (!activeUser) {
                     Swal.fire({ title: 'Bạn chưa đăng nhập', text: 'Vui lòng đăng nhập để tiếp tục.', icon: 'warning' });
                     return;
                 }
@@ -1014,7 +1016,7 @@
                     },
                     status: 'pending',
                     createdAt: new Date().toISOString(),
-                    userId: currentUser ? currentUser.uid : null,
+                    userId: activeUser ? activeUser.uid : null,
                     paymentMethod: selectedMethod === 'vnpay' ? 'VNPay' : 'COD'
                 };
 
