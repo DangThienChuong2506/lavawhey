@@ -251,9 +251,9 @@ function getSafeImage(url) {
                 showLoading('Đang chuyển hướng đến Google...');
                 try {
                     const res = await auth.signInWithPopup(googleProvider);
+                    Swal.close();
                     if (res.user) {
                         if (res.user.email === 'quantrilavawhey@gmail.com') {
-                            // Tránh chia sẻ phiên bản đăng nhập quản trị với người dùng thường
                             await auth.signOut();
                             window.location.href = 'admin.html';
                             return;
@@ -269,9 +269,10 @@ function getSafeImage(url) {
                         showSuccess('Đăng nhập thành công!');
                     }
                 } catch (err) {
+                    // Always close the loading spinner first
+                    Swal.close();
                     // User closed the popup - this is normal behavior, not an error
                     if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
-                        Swal.close();
                         return;
                     }
                     console.error('Lỗi Google login:', err);
