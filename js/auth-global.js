@@ -269,6 +269,11 @@ function getSafeImage(url) {
                         showSuccess('Đăng nhập thành công!');
                     }
                 } catch (err) {
+                    // User closed the popup - this is normal behavior, not an error
+                    if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+                        Swal.close();
+                        return;
+                    }
                     console.error('Lỗi Google login:', err);
                     showError('Đăng nhập Google thất bại: ' + (err.message || ''));
                 }
