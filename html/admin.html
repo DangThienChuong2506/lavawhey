@@ -3979,18 +3979,39 @@
             }
         });
 
-        // Load categories table
-        async function loadCategories(reload = false) {
+        // Load categories table (Realtime)
+        let _adminCategoriesListener = null;
+        let _adminCategoriesRenderTimer = null;
+        let _adminCategoriesData = null;
+
+        function loadCategories(reload = false) {
             try {
-                console.log('Loading categories from Firebase...');
+                if (!db) throw new Error('Firebase database not initialized');
 
-                // Kiểm tra kết nối Firebase
-                if (!db) {
-                    throw new Error('Firebase database not initialized');
+                if (!_adminCategoriesListener) {
+                    console.log('Attaching categories realtime listener...');
+                    _adminCategoriesListener = db.ref('categories').on('value', snap => {
+                        _adminCategoriesData = snap.val();
+                        debounceRenderAdminCategories(reload);
+                    });
+                } else if (reload) {
+                    debounceRenderAdminCategories(true);
                 }
+            } catch (error) {
+                console.error('Error attaching realtime listener for categories:', error);
+            }
+        }
 
-                const catSnap = await db.ref('categories').once('value');
-                let categories = catSnap.val();
+        function debounceRenderAdminCategories(reload) {
+            if (_adminCategoriesRenderTimer) clearTimeout(_adminCategoriesRenderTimer);
+            _adminCategoriesRenderTimer = setTimeout(() => {
+                renderAdminCategoriesTable(reload);
+            }, 100);
+        }
+
+        async function renderAdminCategoriesTable(reload) {
+            try {
+                let categories = _adminCategoriesData;
                 console.log('Raw categories data:', categories); // Debug log
 
                 // Kiểm tra và chuyển đổi dữ liệu
@@ -4472,19 +4493,53 @@
             });
         }
 
-        // Load orders table
-        async function loadOrders() {
-            try {
-                // Lấy danh sách đơn hàng từ Firebase
-                const [orderSnap, invoiceSnap] = await Promise.all([
-                    db.ref('orders').once('value'),
-                    db.ref('invoices').once('value')
-                ]);
+        // Load orders table (Realtime)
+        let _adminOrdersListener = null;
+        let _adminInvoicesListener = null;
+        let _adminOrdersData = null;
+        let _adminInvoicesData = null;
+        let _adminOrdersRenderTimer = null;
 
-                const orders = orderSnap.val() || {};
-                const invoices = invoiceSnap.val() || {};
+        function loadOrders() {
+            try {
+                if (_adminOrdersListener) {
+                    db.ref('orders').off('value', _adminOrdersListener);
+                }
+                if (_adminInvoicesListener) {
+                    db.ref('invoices').off('value', _adminInvoicesListener);
+                }
+
+                _adminOrdersListener = db.ref('orders').on('value', snap => {
+                    _adminOrdersData = snap.val() || {};
+                    debounceRenderAdminOrders();
+                });
+
+                _adminInvoicesListener = db.ref('invoices').on('value', snap => {
+                    _adminInvoicesData = snap.val() || {};
+                    debounceRenderAdminOrders();
+                });
+            } catch (error) {
+                console.error('Error attaching realtime listener for orders:', error);
+            }
+        }
+
+        function debounceRenderAdminOrders() {
+            if (_adminOrdersData !== null && _adminInvoicesData !== null) {
+                if (_adminOrdersRenderTimer) clearTimeout(_adminOrdersRenderTimer);
+                _adminOrdersRenderTimer = setTimeout(() => {
+                    renderAdminOrdersTable();
+                }, 100);
+            }
+        }
+
+        function renderAdminOrdersTable() {
+            try {
+                const orders = _adminOrdersData;
+                const invoices = _adminInvoicesData;
                 const tbody = document.querySelector('#table-orders tbody');
+                if (!tbody) return;
                 tbody.innerHTML = '';
+
 
                 // Tạo map để nhanh chóng kiểm tra trạng thái Đã nhận từ invoices
                 const receivedOrderKeys = new Set();
@@ -4842,12 +4897,40 @@
             }
         }
 
-        // Load users table
-        async function loadUsers() {
+        // Load users table (Realtime)
+        let _adminUsersListener = null;
+        let _adminUsersRenderTimer = null;
+        let _adminUsersData = null;
+
+        function loadUsers() {
             try {
-                const userSnap = await db.ref('users').once('value');
-                const users = userSnap.val() || {};
+                if (_adminUsersListener) {
+                    db.ref('users').off('value', _adminUsersListener);
+                }
+
+                _adminUsersListener = db.ref('users').on('value', snap => {
+                    _adminUsersData = snap.val() || {};
+                    debounceRenderAdminUsers();
+                });
+            } catch (error) {
+                console.error('Error attaching realtime listener for users:', error);
+            }
+        }
+
+        function debounceRenderAdminUsers() {
+            if (_adminUsersData !== null) {
+                if (_adminUsersRenderTimer) clearTimeout(_adminUsersRenderTimer);
+                _adminUsersRenderTimer = setTimeout(() => {
+                    renderAdminUsersTable();
+                }, 100);
+            }
+        }
+
+        function renderAdminUsersTable() {
+            try {
+                const users = _adminUsersData;
                 const tbody = document.querySelector('#table-users tbody');
+                if (!tbody) return;
                 tbody.innerHTML = '';
                 Object.values(users).forEach((user, idx) => {
                     tbody.innerHTML += `<tr>
@@ -4938,14 +5021,45 @@
         }
 
         // Load shippers table
-        async function loadShippers() {
+        // Load shippers table (Realtime)
+        let _adminShippersListener = null;
+        let _adminShippersOrdersListener = null;
+        let _adminShippersRenderTimer = null;
+        let _adminShippersData = null;
+        let _adminShippersOrdersData = null;
+
+        function loadShippers() {
             try {
-                const [snap, ordersSnap] = await Promise.all([
-                    db.ref('shippers').once('value'),
-                    db.ref('orders').once('value')
-                ]);
-                const shippers = snap.val() || {};
-                const allOrders = ordersSnap.val() || {};
+                if (!_adminShippersListener) {
+                    _adminShippersListener = db.ref('shippers').on('value', snap => {
+                        _adminShippersData = snap.val() || {};
+                        debounceRenderAdminShippers();
+                    });
+                }
+                if (!_adminShippersOrdersListener) {
+                    _adminShippersOrdersListener = db.ref('orders').on('value', snap => {
+                        _adminShippersOrdersData = snap.val() || {};
+                        debounceRenderAdminShippers();
+                    });
+                }
+            } catch (error) {
+                console.error('Error attaching realtime listener for shippers:', error);
+            }
+        }
+
+        function debounceRenderAdminShippers() {
+            if (_adminShippersData !== null && _adminShippersOrdersData !== null) {
+                if (_adminShippersRenderTimer) clearTimeout(_adminShippersRenderTimer);
+                _adminShippersRenderTimer = setTimeout(() => {
+                    renderAdminShippersTable();
+                }, 100);
+            }
+        }
+
+        async function renderAdminShippersTable() {
+            try {
+                const shippers = _adminShippersData;
+                const allOrders = _adminShippersOrdersData;
 
                 const tbody = document.querySelector('#table-shippers tbody');
                 if (!tbody) return;
@@ -5254,11 +5368,32 @@
         };
 
         // Load contacts table
-        async function loadContacts() {
+        // Load contacts table (Realtime)
+        let _adminContactsListener = null;
+        let _adminContactsRenderTimer = null;
+        let _adminContactsData = null;
+
+        function loadContacts() {
             try {
-                const contactSnap = await db.ref('contacts').once('value');
-                const contacts = contactSnap.val() || {};
+                if (!_adminContactsListener) {
+                    _adminContactsListener = db.ref('contacts').on('value', snap => {
+                        _adminContactsData = snap.val() || {};
+                        if (_adminContactsRenderTimer) clearTimeout(_adminContactsRenderTimer);
+                        _adminContactsRenderTimer = setTimeout(() => {
+                            renderAdminContactsTable();
+                        }, 100);
+                    });
+                }
+            } catch (error) {
+                console.error('Error attaching realtime listener for contacts:', error);
+            }
+        }
+
+        async function renderAdminContactsTable() {
+            try {
+                const contacts = _adminContactsData;
                 const tbody = document.querySelector('#table-contacts tbody');
+                if (!tbody) return;
                 tbody.innerHTML = '';
                 Object.values(contacts).forEach((contact, idx) => {
                     tbody.innerHTML += `<tr>
@@ -5362,11 +5497,38 @@
             }
         }
 
-        // Load news table
-        async function loadNews(reload = false) {
+        // Load news table (Realtime)
+        let _adminNewsListener = null;
+        let _adminNewsRenderTimer = null;
+        let _adminNewsData = null;
+
+        function loadNews(reload = false) {
             try {
-                const newsSnap = await db.ref('news').once('value');
-                let news = newsSnap.val() || [];
+                if (!_adminNewsListener) {
+                    _adminNewsListener = db.ref('news').on('value', snap => {
+                        _adminNewsData = snap.val() || [];
+                        debounceRenderAdminNews(reload);
+                    });
+                } else if (reload) {
+                    debounceRenderAdminNews(true);
+                }
+            } catch (error) {
+                console.error('Error attaching realtime listener for news:', error);
+            }
+        }
+
+        function debounceRenderAdminNews(reload) {
+            if (_adminNewsData !== null) {
+                if (_adminNewsRenderTimer) clearTimeout(_adminNewsRenderTimer);
+                _adminNewsRenderTimer = setTimeout(() => {
+                    renderAdminNewsTable(); // Data table redraws inside if reload logic needed
+                }, 100);
+            }
+        }
+
+        async function renderAdminNewsTable() {
+            try {
+                let news = _adminNewsData;
                 // Đảm bảo news là array
                 if (!Array.isArray(news)) {
                     if (news && typeof news === 'object') {

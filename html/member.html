@@ -5740,12 +5740,23 @@
                 }
             };
 
-            // 3. Lịch sử đơn hàng
+            // 3. Lịch sử đơn hàng (realtime listener)
+            let _ordersListener = null;
+
             function loadOrders() {
                 if (!currentUser) return;
                 const tbody = document.getElementById('ordersList');
-                database.ref('invoices').once('value').then(snap => {
+
+                // Detach previous listener to prevent duplicates
+                if (_ordersListener) {
+                    database.ref('invoices').off('value', _ordersListener);
+                    _ordersListener = null;
+                }
+
+                // Real-time listener: auto-updates UI whenever Firebase data changes
+                _ordersListener = database.ref('invoices').on('value', snap => {
                     const data = snap.val() || {};
+
                     tbody.innerHTML = '';
                     // Lấy email user hiện tại
                     const userEmail = currentUser.email;
