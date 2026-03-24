@@ -20,8 +20,10 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <script src="search_new.js"></script>
-    <link rel="stylesheet" href="search.css">
+    <script src="../js/search_new.js"></script>
+    <link rel="stylesheet" href="../css/search.css">
+    <script src="../js/mobile.js"></script>
+    <link rel="stylesheet" href="../css/mobile.css">
     <style>
         /* Reset CSS */
         * {
@@ -1638,21 +1640,38 @@
 
         .product-buttons {
             display: flex;
-            gap: 10px;
-            padding: 0 1.5rem;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 0 10px 10px;
+            width: 100%;
         }
 
-        .btn-add-cart {
+        .btn-add-cart,
+        .btn-buy-now {
             flex: 1;
-            padding: 10px;
-            background-color: white;
-            color: var(--primary-color);
-            border: 2px solid var(--primary-color);
+            height: 44px;
+            padding: 0 15px;
             border-radius: 8px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
             transition: all 0.3s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 140px;
+        }
+
+        .btn-add-cart {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            gap: 8px;
+        }
+
+        .btn-add-cart i {
+            font-size: 1rem;
         }
 
         .btn-add-cart:hover {
@@ -1662,16 +1681,9 @@
         }
 
         .btn-buy-now {
-            flex: 1;
-            padding: 10px;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: all 0.3s ease;
         }
 
         .btn-buy-now:hover {
@@ -1679,1215 +1691,568 @@
             transform: translateY(-2px);
         }
 
-        .about-container {
-            padding-top: 120px;
-            overflow-x: hidden;
-        }
-
-        .about-hero {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('assets/images/hero-bg.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            height: 600px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: white;
-            margin-bottom: 4rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .about-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255, 107, 0, 0.3), rgba(255, 133, 51, 0.3));
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s ease forwards;
-        }
-
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero-content h1 {
-            font-size: 4.5rem;
-            margin-bottom: 1rem;
-            font-weight: 800;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            letter-spacing: 2px;
-        }
-
-        .hero-content .subtitle {
-            font-size: 2.2rem;
-            font-weight: 300;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
-            color: var(--primary-color);
-        }
-
-        .story-section {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 1s ease forwards 0.5s;
-        }
-
-        .story-intro {
-            font-size: 1.4rem;
-            font-weight: 500;
-            margin-bottom: 2rem;
-            color: var(--primary-color);
-            line-height: 1.8;
-            text-align: center;
-            font-style: italic;
-        }
-
-        .story-content p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #555;
-            margin-bottom: 1.5rem;
-            text-align: justify;
-        }
-
-        .timeline-section {
-            background-color: #f8f9fa;
-            padding: 6rem 2rem;
-            margin: 6rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .timeline-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(255, 107, 0, 0.05) 0%, rgba(255, 133, 51, 0.05) 100%);
-            z-index: 0;
-        }
-
-        .timeline {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            position: relative;
-            z-index: 1;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: -1;
-        }
-
-        .timeline-item {
-            position: relative;
-            text-align: center;
-            flex: 1;
-            padding: 0 1rem;
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        .timeline-item:nth-child(1) {
-            animation-delay: 0.2s;
-        }
-
-        .timeline-item:nth-child(2) {
-            animation-delay: 0.4s;
-        }
-
-        .timeline-item:nth-child(3) {
-            animation-delay: 0.6s;
-        }
-
-        .timeline-item:nth-child(4) {
-            animation-delay: 0.8s;
-        }
-
-        .year {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 30px;
-            display: inline-block;
-            margin-bottom: 1.5rem;
-            font-weight: bold;
-            font-size: 1.2rem;
-            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.2);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .timeline-item:hover .year {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(255, 107, 0, 0.3);
-        }
-
-        .timeline-item .content {
-            font-size: 1.1rem;
-            color: #444;
-            line-height: 1.6;
-            margin-top: 1rem;
-        }
-
-        .experience-section {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-            text-align: center;
-        }
-
-        .experience-content p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #555;
-            margin-bottom: 2rem;
-            text-align: justify;
-        }
-
-        .mvv-section {
-            max-width: 1200px;
-            margin: 6rem auto;
-            padding: 2rem;
-        }
-
-        .mvv-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 3rem;
-            margin-bottom: 5rem;
-        }
-
-        .mvv-card {
-            background-color: white;
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .mvv-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 5px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-        }
-
-        .mvv-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(255, 107, 0, 0.15);
-        }
-
-        .mvv-card h3 {
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            font-size: 2rem;
-            position: relative;
-            padding-bottom: 1rem;
-        }
-
-        .mvv-card h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: var(--primary-color);
-        }
-
-        .mvv-card p {
-            font-size: 1.1rem;
-            line-height: 1.8;
-            color: #555;
-        }
-
-        .core-values {
-            text-align: center;
-            margin-top: 5rem;
-        }
-
-        .core-values h3 {
-            font-size: 2.5rem;
-            color: var(--dark-color);
-            margin-bottom: 3rem;
-            position: relative;
-            padding-bottom: 1rem;
-        }
-
-        .core-values h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-        }
-
-        .values-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2.5rem;
-            margin-top: 3rem;
-        }
-
-        .value-card {
-            background-color: white;
-            padding: 2.5rem 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .value-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: 0;
-        }
-
-        .value-card:hover::before {
-            opacity: 0.05;
-        }
-
-        .value-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(255, 107, 0, 0.15);
-        }
-
-        .value-card i {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .value-card h4 {
-            color: var(--dark-color);
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .value-card p {
-            color: #666;
-            line-height: 1.6;
-            position: relative;
-            z-index: 1;
-        }
-
-        .team-section {
-            max-width: 1200px;
-            margin: 6rem auto;
-            padding: 2rem;
-            text-align: center;
-        }
-
-        .team-section h3 {
-            font-size: 2.5rem;
-            color: var(--dark-color);
-            margin-bottom: 3rem;
-            position: relative;
-            padding-bottom: 1rem;
-        }
-
-        .team-section h3::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 3px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-        }
-
-        .team-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 4rem;
-            margin-top: 3rem;
-        }
-
-        .team-member {
-            background-color: white;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: all 0.4s ease;
-            position: relative;
-        }
-
-        .team-member:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(255, 107, 0, 0.15);
-        }
-
-        .member-image {
-            height: 400px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .member-image::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 30%;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
-        }
-
-        .member-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-
-        .team-member:hover .member-image img {
-            transform: scale(1.05);
-        }
-
-        .member-info {
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .member-info::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 3px;
-            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-        }
-
-        .member-info h4 {
-            color: var(--primary-color);
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .member-info p {
-            color: #666;
-            font-size: 1.1rem;
-        }
-
         @media (max-width: 1200px) {
-            .values-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 2rem;
+
+            .btn-add-cart,
+            .btn-buy-now {
+                font-size: 0.9rem;
+                padding: 0 10px;
+                min-width: 120px;
             }
         }
 
         @media (max-width: 992px) {
-            .hero-content h1 {
-                font-size: 3.5rem;
-            }
-
-            .hero-content .subtitle {
-                font-size: 1.8rem;
-            }
-
-            .mvv-container {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .team-grid {
-                grid-template-columns: 1fr;
-                gap: 3rem;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .about-hero {
-                height: 500px;
-            }
-
-            .hero-content h1 {
-                font-size: 2.8rem;
-            }
-
-            .hero-content .subtitle {
-                font-size: 1.5rem;
-            }
-
-            .timeline {
+            .product-buttons {
                 flex-direction: column;
-                gap: 3rem;
+                gap: 8px;
             }
 
-            .timeline::before {
-                width: 3px;
-                height: 100%;
-                left: 50%;
-                top: 0;
-                transform: translateX(-50%);
-            }
-
-            .values-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
+            .btn-add-cart,
+            .btn-buy-now {
+                width: 100%;
             }
         }
 
-        @media (max-width: 576px) {
-            .hero-content h1 {
-                font-size: 2.2rem;
-            }
+        /* Promotion Section Styles */
+        .promotion-section {
+            padding: 80px 5%;
+            background: linear-gradient(135deg, #fff5f5 0%, #fff0f6 100%);
 
-            .hero-content .subtitle {
-                font-size: 1.2rem;
-            }
-
-            .story-intro {
-                font-size: 1.2rem;
-            }
-
-            .mvv-card {
-                padding: 2rem;
-            }
-
-            .member-image {
-                height: 300px;
-            }
         }
 
-        /* Featured Brands Section */
-        .featured-brands-section {
-            padding: 5rem 5%;
-            background: #f8f9fa;
-        }
-
-        .section-header {
+        .promotion-header {
             text-align: center;
-            margin-bottom: 4rem;
+            margin-bottom: 60px;
         }
 
-        .section-header h2 {
+        .promotion-header h1 {
             font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary-color);
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-weight: 700;
         }
 
-        .section-subtitle {
+        .promotion-header p {
             font-size: 1.1rem;
             color: #666;
-        }
-
-        .brands-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .brand-item {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .brand-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-
-        .brand-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 1.5rem;
-        }
-
-        .brand-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .brand-info h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--dark-color);
-        }
-
-        .brand-info p {
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 1.5rem;
-        }
-
-        .brand-highlights {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .brand-highlights span {
-            background: var(--primary-color);
-            color: white;
-            padding: 0.3rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-
-        .partnership-summary {
-            text-align: center;
             max-width: 800px;
             margin: 0 auto;
         }
 
-        .partnership-summary h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: var(--dark-color);
-        }
-
-        .partnership-summary p {
-            font-size: 1rem;
-            line-height: 1.6;
-            color: #666;
-            margin-bottom: 3rem;
-        }
-
-        .benefits-grid {
+        .promotion-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        .benefit-card {
-            text-align: center;
-            padding: 2rem;
+        .promotion-card {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s ease;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
-        .benefit-card:hover {
-            transform: translateY(-3px);
+        .promotion-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
         }
 
-        .benefit-card i {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .benefit-card h4 {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            color: var(--dark-color);
-        }
-
-        .benefit-card p {
-            color: #666;
-            line-height: 1.5;
-            font-size: 0.9rem;
-        }
-
-        /* Contact & Complaints Section */
-        .contact-complaints-section {
-            padding: 5rem 5%;
-            background: white;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 4rem;
-        }
-
-        .contact-card {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .contact-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-
-        .contact-icon {
-            margin-bottom: 1.5rem;
-        }
-
-        .contact-icon i {
-            font-size: 2.5rem;
-            color: var(--primary-color);
-        }
-
-        .contact-content h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1rem;
-            color: var(--dark-color);
-        }
-
-        .contact-main {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .contact-detail {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-
-        .process-section {
-            margin-bottom: 4rem;
-        }
-
-        .process-section h3 {
-            text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 3rem;
-            color: var(--dark-color);
-        }
-
-        .process-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-        }
-
-        .process-item {
-            text-align: center;
-            padding: 2rem;
-            background: #f8f9fa;
-            border-radius: 12px;
-            transition: transform 0.3s ease;
-        }
-
-        .process-item:hover {
-            transform: translateY(-3px);
-        }
-
-        .process-number {
-            width: 50px;
-            height: 50px;
+        .promotion-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             background: var(--primary-color);
             color: white;
-            border-radius: 50%;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            z-index: 1;
+        }
+
+        .promotion-image {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            background: #f8f9fa;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .promotion-content {
+            padding: 25px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .promotion-title {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .promotion-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            flex: 1;
+        }
+
+        .promotion-price {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .original-price {
+            color: #999;
+            text-decoration: line-through;
+            font-size: 1rem;
+        }
+
+        .discounted-price {
+            color: var(--primary-color);
+            font-size: 1.4rem;
+            font-weight: 700;
+        }
+
+        .product-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            padding: 0 10px 10px;
+            width: 100%;
+        }
+
+        .btn-add-cart,
+        .btn-buy-now {
+            flex: 1;
+            height: 44px;
+            padding: 0 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            white-space: nowrap;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin: 0 auto 1.5rem;
+            min-width: 140px;
         }
 
-        .process-item h4 {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            color: var(--dark-color);
-        }
-
-        .process-item p {
-            color: #666;
-            line-height: 1.5;
-            font-size: 0.9rem;
-        }
-
-        .commitment-section h3 {
-            text-align: center;
-            font-size: 1.8rem;
-            margin-bottom: 3rem;
-            color: var(--dark-color);
-        }
-
-        .commitment-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-        }
-
-        .commitment-card {
-            text-align: center;
-            padding: 2rem;
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 12px;
-            transition: transform 0.3s ease;
-        }
-
-        .commitment-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-        }
-
-        .commitment-card i {
-            font-size: 2rem;
+        .btn-add-cart {
+            background-color: white;
             color: var(--primary-color);
-            margin-bottom: 1rem;
+            border: 2px solid var(--primary-color);
+            gap: 8px;
         }
 
-        .commitment-card h4 {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            color: var(--dark-color);
-        }
-
-        .commitment-card p {
-            color: #666;
-            line-height: 1.5;
-            font-size: 0.9rem;
-        }
-
-        /* Terms Section */
-        .terms-section {
-            padding: 5rem 5%;
-            background: #f8f9fa;
-        }
-
-        .terms-content {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .terms-category {
-            background: white;
-            border-radius: 12px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .category-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 2px solid #f8f9fa;
-        }
-
-        .category-header i {
-            font-size: 1.5rem;
-            color: var(--primary-color);
-        }
-
-        .category-header h3 {
-            font-size: 1.5rem;
-            color: var(--dark-color);
-            margin: 0;
-        }
-
-        .category-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-
-        .term-group h4 {
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            color: var(--dark-color);
-        }
-
-        .term-group ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .term-group ul li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-            color: #666;
-            line-height: 1.6;
-            font-size: 0.9rem;
-        }
-
-        .term-group ul li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-
-        .terms-footer {
-            background: white;
-            border-radius: 12px;
-            padding: 2.5rem;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-
-        .terms-footer h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--dark-color);
-        }
-
-        .terms-footer p {
+        .btn-add-cart i {
             font-size: 1rem;
-            color: #666;
-            line-height: 1.6;
-            margin-bottom: 2rem;
         }
 
-        .update-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            background: #f8f9fa;
-            padding: 2rem;
-            border-radius: 12px;
+        .btn-add-cart:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateY(-2px);
         }
 
-        .info-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .btn-buy-now {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
         }
 
-        .info-item .label {
-            font-weight: 500;
-            color: var(--dark-color);
+        .btn-buy-now:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
         }
 
-        .info-item .value {
-            font-weight: bold;
-            color: var(--primary-color);
-        }
+        @media (max-width: 1200px) {
 
-        /* Responsive Design for new sections */
-        @media (max-width: 768px) {
-            .brands-showcase {
-                grid-template-columns: 1fr;
+            .btn-add-cart,
+            .btn-buy-now {
+                font-size: 0.9rem;
+                padding: 0 10px;
+                min-width: 120px;
             }
+        }
 
-            .brand-card {
+        @media (max-width: 992px) {
+            .product-buttons {
                 flex-direction: column;
-                text-align: center;
+                gap: 8px;
             }
 
-            .brand-stats {
-                justify-content: center;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .process-steps {
-                grid-template-columns: 1fr;
-            }
-
-            .step-number::after {
-                display: none;
-            }
-
-            .terms-details {
-                grid-template-columns: 1fr;
-            }
-
-            .update-info {
-                grid-template-columns: 1fr;
+            .btn-add-cart,
+            .btn-buy-now {
+                width: 100%;
             }
         }
 
-        @media (max-width: 576px) {
+        @media (max-width: 1024px) {
+            .promotion-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
-            .featured-brands-section h2,
-            .contact-complaints-section h2,
-            .terms-section h2 {
+        @media (max-width: 768px) {
+            .promotion-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .promotion-header h1 {
                 font-size: 2rem;
             }
 
-            .brand-card {
-                padding: 1.5rem;
-            }
-
-            .contact-info-card {
-                padding: 2rem;
-            }
-
-            .terms-category {
-                padding: 2rem;
+            .promotion-card {
+                max-width: 400px;
+                margin: 0 auto;
             }
         }
 
-        .fade-in {
-            opacity: 0;
-            transform: translateY(40px);
-            animation: fadeInUp 1s forwards;
-            margin-bottom: 40px;
+        /* Flash Sale Banner Enhancement */
+        .sale-banner {
+            background: linear-gradient(135deg, #ff4e50, #f9d423);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+            margin: 40px auto;
+            max-width: 1200px;
+            border-radius: 30px;
+            box-shadow: 0 15px 40px rgba(255, 78, 80, 0.3);
         }
 
-        @keyframes fadeInUp {
+        .sale-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .sale-banner h2 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .sale-banner p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .countdown-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            min-width: 100px;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .countdown-item span:first-child {
+            font-size: 2.5em;
+            font-weight: 800;
+            display: block;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .countdown-item span:last-child {
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .promotion-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .countdown {
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+
+            .countdown-item {
+                min-width: 80px;
+                padding: 15px;
+            }
+
+            .sale-banner h2 {
+                font-size: 2em;
+            }
+
+            .promotion-header h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* Modal nâng cấp phong cách web lớn */
+        #news-modal.modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(3px);
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            animation: fadeInModalBg 0.3s;
+        }
+
+        #news-modal.modal.show {
+            display: flex;
+        }
+
+        @keyframes fadeInModalBg {
+            from {
+                opacity: 0;
+            }
+
             to {
                 opacity: 1;
-                transform: none;
             }
         }
 
-        .highlight-brand-section,
-        .contact-complain-section,
-        .transaction-terms-section {
-            background: linear-gradient(135deg, #fff7ed 60%, #ffe0b2 100%);
+        #news-modal .modal-content {
+            background: #fff;
             border-radius: 18px;
-            box-shadow: 0 4px 24px rgba(255, 140, 0, 0.08);
-            padding: 40px 28px 32px 28px;
-            margin: 40px 0;
-            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            max-width: 700px;
+            width: 98vw;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.22);
+            animation: modalZoomIn 0.38s cubic-bezier(.77, 0, .18, 1);
+            position: relative;
+            padding: 0 0 28px 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
-        .highlight-brand-section h3,
-        .contact-complain-section h3,
-        .transaction-terms-section h3 {
-            font-size: 2.1rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, #ff9800 30%, #ff6b00 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            transition: transform 0.2s, text-shadow 0.2s;
-            margin-bottom: 22px;
-            letter-spacing: 1px;
+        @keyframes modalZoomIn {
+            from {
+                transform: scale(0.85) translateY(60px);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #news-modal .close-modal {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 50%;
+            color: #FF6B00;
+            font-size: 2rem;
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+            border: none;
+            transition: background 0.2s, color 0.2s;
+            z-index: 10;
         }
 
-        .highlight-brand-section h3:hover,
-        .contact-complain-section h3:hover,
-        .transaction-terms-section h3:hover {
-            transform: scale(1.04);
-            text-shadow: 0 2px 12px rgba(255, 140, 0, 0.18);
+        #news-modal .close-modal:hover {
+            background: #FF6B00;
+            color: #fff;
         }
 
-        .highlight-brand-section h3::before {
-            content: '\f005';
-            /* star icon */
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color: #ff9800;
-            font-size: 1.3em;
-        }
-
-        .contact-complain-section h3::before {
-            content: '\f0e0';
-            /* envelope icon */
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color: #ff9800;
-            font-size: 1.2em;
-        }
-
-        .transaction-terms-section h3::before {
-            content: '\f02d';
-            /* file-alt icon */
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color: #ff9800;
-            font-size: 1.2em;
-        }
-
-        .highlight-brand-content ul,
-        .contact-complain-content ul,
-        .transaction-terms-content ul {
-            margin: 18px 0 0 24px;
-            padding-left: 0;
-        }
-
-        .highlight-brand-content li,
-        .contact-complain-content li,
-        .transaction-terms-content li {
-            margin-bottom: 10px;
-            font-size: 1.08rem;
+        #news-modal .modal-img-wrap {
             position: relative;
-            padding-left: 28px;
-            transition: color 0.2s;
+            width: 100%;
+            height: 270px;
+            overflow: hidden;
+            border-radius: 18px 18px 0 0;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.10);
         }
 
-        .highlight-brand-content li::before {
-            content: '\f058';
-            /* check-circle */
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color: #ff9800;
+        #news-modal .modal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(.77, 0, .18, 1);
+        }
+
+        #news-modal.show .modal-img {
+            transform: scale(1.04);
+        }
+
+        #news-modal .modal-img-overlay {
             position: absolute;
             left: 0;
-            top: 2px;
+            right: 0;
+            bottom: 0;
+            top: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.08) 40%, rgba(0, 0, 0, 0.55) 100%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 0 0 24px 0;
+        }
+
+        #news-modal .modal-title {
+            font-size: 2.1rem;
+            color: #fff;
+            font-weight: 800;
+            margin: 0 28px 6px 28px;
+            line-height: 1.2;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+            z-index: 3;
+        }
+
+        #news-modal .modal-meta {
             font-size: 1em;
+            color: #ffe0c2;
+            margin: 0 28px 0 28px;
+            display: flex;
+            gap: 18px;
+            align-items: center;
+            z-index: 3;
         }
 
-        .contact-complain-content li::before {
-            content: '\f095';
-            /* phone */
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color: #ff9800;
-            position: absolute;
-            left: 0;
-            top: 2px;
+        #news-modal .modal-meta i {
+            color: #FFB266;
+            margin-right: 4px;
+        }
+
+        #modal-body {
+            padding: 60px 50px 0 50px;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        #news-modal .modal-content-text {
+            color: #333;
+            font-size: 1.15em;
+            line-height: 1.8;
+            margin-bottom: 16px;
+            text-align: justify;
+        }
+
+        #news-modal .modal-tags {
+            margin-top: 10px;
+        }
+
+        #news-modal .modal-tag {
+            display: inline-block;
+            background: #FFF3E6;
+            color: #FF6B00;
+            padding: 6px 16px;
+            border-radius: 16px;
+            margin-right: 8px;
             font-size: 1em;
-        }
-
-        .transaction-terms-content li::before {
-            content: '\f00c';
-            /* check */
-            font-family: 'Font Awesome 5 Free';
-            font-weight: 900;
-            color: #ff9800;
-            position: absolute;
-            left: 0;
-            top: 2px;
-            font-size: 1em;
-        }
-
-        .highlight-brand-content li:hover,
-        .contact-complain-content li:hover,
-        .transaction-terms-content li:hover {
-            color: #ff6b00;
-        }
-
-        .highlight-brand-content p,
-        .contact-complain-content p,
-        .transaction-terms-content p {
-            font-size: 1.13rem;
-            color: #222;
-            margin-bottom: 10px;
-        }
-
-        .highlight-brand-content b,
-        .contact-complain-content b,
-        .transaction-terms-content b {
-            color: #ff9800;
+            font-weight: 500;
+            margin-bottom: 4px;
+            box-shadow: 0 1px 4px rgba(255, 107, 0, 0.07);
         }
 
         @media (max-width: 700px) {
-
-            .highlight-brand-section,
-            .contact-complain-section,
-            .transaction-terms-section {
-                padding: 20px 8px 16px 8px;
+            #news-modal .modal-content {
+                max-width: 99vw;
             }
 
-            .highlight-brand-section h3,
-            .contact-complain-section h3,
-            .transaction-terms-section h3 {
-                font-size: 1.3rem;
+            #modal-body {
+                padding: 18px 8px 0 8px;
+            }
+
+            #news-modal .modal-title,
+            #news-modal .modal-meta {
+                margin-left: 12px;
+                margin-right: 12px;
+            }
+
+            #news-modal .modal-img-wrap {
+                height: 180px;
             }
         }
 
-        .policy-btn-container {
-            margin-top: 25px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        @media (max-width: 480px) {
+            #news-modal .modal-title {
+                font-size: 1.1rem;
+            }
+
+            #modal-body {
+                font-size: 0.98em;
+            }
         }
 
-        .btn-policy {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 28px;
-            background: linear-gradient(135deg, var(--primary-color) 0%, #ff8533 100%);
-            color: white !important;
-            text-decoration: none !important;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
-            border: 2px solid transparent;
+        #news-modal .modal-content {
+            max-width: 900px;
+            /* tăng chiều rộng tối đa */
         }
 
-        .btn-policy:hover {
-            transform: translateY(-3px) scale(1.02);
-            box-shadow: 0 8px 25px rgba(255, 107, 0, 0.4);
-            filter: brightness(1.1);
+        #news-modal .modal-img-wrap {
+            height: 340px;
+            /* tăng chiều cao ảnh đầu bài */
         }
 
-        .btn-policy i {
-            font-size: 1.1rem;
-            transition: transform 0.3s ease;
+        #news-modal .modal-title {
+            font-size: 2.6rem;
+            /* tiêu đề lớn hơn */
         }
 
-        .btn-policy:hover i {
-            transform: translateX(5px);
+        #news-modal .modal-content-text {
+            font-size: 1.22em;
+            /* nội dung lớn hơn */
         }
 
-        .policy-text {
-            font-size: 1rem;
-            color: #666;
-            margin: 0;
+        @media (max-width: 1000px) {
+            #news-modal .modal-content {
+                max-width: 99vw;
+            }
+
+            #modal-body {
+                padding: 30px 10px 0 10px;
+            }
+
+            #news-modal .modal-img-wrap {
+                height: 180px;
+            }
         }
     </style>
 
-
-    <script src="js/auth-global.js"></script>
-    <script src="js/marquee.js" charset="UTF-8"></script>
-    <link rel="stylesheet" href="modals.css">
-    <link rel="stylesheet" href="header.css">
+    <script src="../js/auth-global.js"></script>
+    <script src="../js/marquee.js" charset="UTF-8"></script>
+    <link rel="stylesheet" href="../css/modals.css">
+    <link rel="stylesheet" href="../css/header.css">
 </head>
 
 <body>
@@ -2913,15 +2278,15 @@
         <nav class="navbar">
             <div class="logo">
                 <a href="index.html">
-                    <img src="images/logo.png.png" alt="LavaWhey Logo">
+                    <img src="../images/logo.png.png" alt="LavaWhey Logo">
                 </a>
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">Trang chủ</a></li>
                 <li><a href="member.html">Thành viên</a></li>
                 <li><a href="products.html">Sản phẩm</a></li>
-                <li><a href="news.html">Tin tức</a></li>
-                <li><a href="about.html" class="active">Giới thiệu</a></li>
+                <li><a href="news.html" class="active">Tin tức</a></li>
+                <li><a href="about.html">Giới thiệu</a></li>
                 <li><a href="contact.html">Liên hệ</a></li>
                 <li><a href="policy.html">Chính sách</a></li>
                 <li><a href="tools.html">Công cụ</a></li>
@@ -2977,203 +2342,52 @@
     </header>
 
 
-    <!-- Main Content -->
-
+    <!-- Hero Section -->
     <section class="hero">
         <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80"
-            alt="Contact Hero" class="hero-image">
+            alt="Promotion Hero" class="hero-image">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h1>Câu chuyện của Chúng Tôi</h1>
-            <p>LavaWhey</p>
-            <a href="#contact-form" class="cta-button">Gửi Tin Nhắn Ngay</a>
+            <h1>Khuyến Mãi Đặc Biệt</h1>
+            <p>Giảm giá lên đến 30% cho các sản phẩm thực phẩm bổ sung chất lượng cao</p>
+            <a href="#promotion-section" class="cta-button">Xem Ngay</a>
         </div>
     </section>
 
-    <!-- Story Section -->
-    <section class="story-section">
-        <div class="story-content">
-            <p class="story-intro">LavaWhey được thành lập với tình yêu và đam mê dành cho thể thao và sức khỏe. Chúng
-                tôi hiểu rằng việc duy trì một cơ thể khỏe mạnh không chỉ là mục tiêu mà còn là một hành trình cần được
-                đầu tư nghiêm túc.</p>
-            <p>Từ những ngày đầu tiên, chúng tôi đã cam kết mang đến những sản phẩm chất lượng cao nhất, được chọn lọc
-                kỹ lưỡng từ các nhà sản xuất uy tín trên thế giới. Mỗi sản phẩm của LavaWhey đều được kiểm định nghiêm
-                ngặt để đảm bảo an toàn và hiệu quả cho người sử dụng.</p>
-        </div>
+    <!-- Promotion Section -->
+    <section class="promotion-section" id="promotion-section">
+
     </section>
 
-    <!-- Timeline Section -->
-    <section class="timeline-section">
-        <div class="timeline">
-            <div class="timeline-item">
-                <div class="year">2018</div>
-                <div class="content">Khởi đầu với tình yêu thể thao và sức khỏe</div>
-            </div>
-            <div class="timeline-item">
-                <div class="year">2019</div>
-                <div class="content">Mở rộng hệ thống cửa hàng trên toàn quốc</div>
-            </div>
-            <div class="timeline-item">
-                <div class="year">2020</div>
-                <div class="content">Phát triển thương hiệu quốc tế</div>
-            </div>
-            <div class="timeline-item">
-                <div class="year">2023</div>
-                <div class="content">Đạt được nhiều giải thưởng uy tín trong ngành</div>
-            </div>
+    <!-- News Section -->
+    <section class="news-section" id="news-section">
+        <h2>Tin tức mới nhất</h2>
+        <div class="news-grid" id="news-list">
+            <!-- Tin tức sẽ được render ở đây -->
         </div>
+        <div id="news-detail" style="display:none;"></div>
     </section>
 
-    <!-- Experience Section -->
-    <section class="experience-section">
-        <div class="experience-content">
-            <p>Với hơn 5 năm kinh nghiệm trong ngành, chúng tôi tự hào là đối tác tin cậy của nhiều vận động viên chuyên
-                nghiệp và người yêu thể thao. Đội ngũ chuyên gia của chúng tôi luôn nghiên cứu và cập nhật những xu
-                hướng mới nhất trong lĩnh vực dinh dưỡng thể thao.</p>
-            <p>Không chỉ dừng lại ở việc cung cấp sản phẩm, LavaWhey còn là nơi chia sẻ kiến thức, kinh nghiệm và truyền
-                cảm hứng cho cộng đồng yêu thể thao. Chúng tôi tổ chức các sự kiện, workshop và chương trình đào tạo để
-                giúp mọi người hiểu rõ hơn về dinh dưỡng và luyện tập.</p>
+    <div id="news-modal" class="modal">
+        <div class="modal-content" style="max-width:600px;">
+            <span class="close-modal">&times;</span>
+            <div id="modal-body"></div>
         </div>
-    </section>
-
-    <!-- Mission Vision Values Section -->
-    <section class="mvv-section">
-        <div class="mvv-container">
-            <div class="mvv-card mission">
-                <h3>Sứ mệnh</h3>
-                <p>Mang đến những sản phẩm chất lượng cao, giúp mọi người đạt được mục tiêu thể hình và sức khỏe của
-                    mình một cách an toàn và hiệu quả.</p>
-            </div>
-            <div class="mvv-card vision">
-                <h3>Tầm nhìn</h3>
-                <p>Trở thành thương hiệu hàng đầu trong lĩnh vực thực phẩm bổ sung tại Việt Nam, đồng hành cùng cộng
-                    đồng yêu thể thao và sức khỏe.</p>
-            </div>
-        </div>
-
-        <div class="core-values">
-            <h3>Giá trị cốt lõi</h3>
-            <div class="values-grid">
-                <div class="value-card">
-                    <i class="fas fa-award"></i>
-                    <h4>Chất lượng</h4>
-                    <p>Cam kết mang đến những sản phẩm chất lượng cao nhất</p>
-                </div>
-                <div class="value-card">
-                    <i class="fas fa-fire"></i>
-                    <h4>Đam mê</h4>
-                    <p>Luôn nhiệt huyết với sứ mệnh nâng cao sức khỏe cộng đồng</p>
-                </div>
-                <div class="value-card">
-                    <i class="fas fa-handshake"></i>
-                    <h4>Uy tín</h4>
-                    <p>Xây dựng niềm tin với khách hàng thông qua sự minh bạch</p>
-                </div>
-                <div class="value-card">
-                    <i class="fas fa-users"></i>
-                    <h4>Cộng đồng</h4>
-                    <p>Xây dựng và phát triển cộng đồng yêu thể thao</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Team Section -->
-    <section class="team-section">
-        <h3>Đội ngũ của chúng tôi</h3>
-        <div class="team-grid">
-            <div class="team-member">
-                <div class="member-image">
-                    <img src="assets/images/ceo.jpg" alt="CEO" onerror="this.src='assets/images/default-avatar.jpg'">
-                </div>
-                <div class="member-info">
-                    <h4>Đặng Thiên Chương</h4>
-                    <p>CEO & Người sáng lập</p>
-                </div>
-            </div>
-            <div class="team-member">
-                <div class="member-image">
-                    <img src="assets/images/marketing-director.jpg" alt="Marketing Director"
-                        onerror="this.src='assets/images/default-avatar.jpg'">
-                </div>
-                <div class="member-info">
-                    <h4>IFBB Đặng Thiên Chương</h4>
-                    <p>Giám đốc Marketing</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Thương hiệu nổi bật -->
-    <section id="featured-brands" class="highlight-brand-section fade-in">
-        <h3>Thương hiệu nổi bật</h3>
-        <div class="highlight-brand-content">
-            <p>LavaWhey tự hào là đối tác phân phối chính thức của nhiều thương hiệu thực phẩm bổ sung nổi tiếng trên
-                thế giới như Optimum Nutrition, MyProtein, Rule 1, Applied Nutrition... Chúng tôi luôn lựa chọn các
-                thương hiệu uy tín, sản phẩm có nguồn gốc rõ ràng, được kiểm định chất lượng nghiêm ngặt để mang đến cho
-                khách hàng sự an tâm tuyệt đối khi sử dụng.</p>
-            <ul>
-                <li>Đa dạng sản phẩm chính hãng, nhập khẩu trực tiếp</li>
-                <li>Cam kết chất lượng, hoàn tiền nếu phát hiện hàng giả</li>
-                <li>Thường xuyên cập nhật các dòng sản phẩm mới, phù hợp xu hướng</li>
-            </ul>
-        </div>
-    </section>
-
-    <!-- Liên hệ & khiếu nại -->
-    <section id="contact-complaints" class="contact-complain-section fade-in">
-        <h3>Liên hệ & Khiếu nại</h3>
-        <div class="contact-complain-content">
-            <p>Chúng tôi luôn lắng nghe mọi ý kiến đóng góp, phản hồi và khiếu nại từ khách hàng để không ngừng hoàn
-                thiện dịch vụ. Nếu bạn có bất kỳ thắc mắc, góp ý hoặc cần hỗ trợ giải quyết khiếu nại, vui lòng liên hệ
-                với chúng tôi qua các kênh sau:</p>
-            <ul>
-                <li><b>Hotline:</b> 0847 788 360 (8:00 - 21:00, tất cả các ngày trong tuần)</li>
-                <li><b>Email:</b> LavaWhey@gmail.com</li>
-                <li><b>Địa chỉ:</b> Hẻm 112/12, Đường 3/2, Hưng Lợi, Ninh Kiều, TP.Cần Thơ</li>
-                <li><b>Facebook:</b> LavaWhey</li>
-            </ul>
-            <p>Mọi khiếu nại sẽ được tiếp nhận và xử lý trong vòng 24h làm việc.</p>
-        </div>
-    </section>
-
-    <!-- Điều khoản giao dịch -->
-    <section id="transaction-terms" class="transaction-terms-section fade-in">
-        <h3>Điều khoản giao dịch</h3>
-        <div class="transaction-terms-content">
-            <p>Khi mua hàng tại LavaWhey, khách hàng vui lòng đọc kỹ các điều khoản giao dịch sau để đảm bảo quyền lợi
-                của mình:</p>
-            <ul>
-                <li>Sản phẩm được đổi trả trong vòng 7 ngày nếu có lỗi từ nhà sản xuất hoặc giao nhầm hàng.</li>
-                <li>Khách hàng cần giữ hóa đơn và bao bì sản phẩm khi đổi trả.</li>
-                <li>Thanh toán linh hoạt: tiền mặt, chuyển khoản, ví điện tử.</li>
-                <li>Chính sách bảo mật thông tin khách hàng tuyệt đối.</li>
-                <li>Mọi tranh chấp phát sinh sẽ được giải quyết trên tinh thần hợp tác và tuân thủ pháp luật Việt Nam.
-                </li>
-            </ul>
-            <div class="policy-btn-container">
-                <p class="policy-text">Chi tiết vui lòng xem thêm tại:</p>
-                <a href="policy.html" class="btn-policy">
-                    <i class="fas fa-file-contract"></i>
-                    Xem Chính sách của LavaWhey
-                    <i class="fas fa-arrow-right" style="font-size: 0.8rem;"></i>
-                </a>
-            </div>
-
-        </div>
-    </section>
+    </div>
 
     <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-section">
                 <h3>Giới thiệu chung</h3>
-                <p>Giới thiệu về LavaWhey</p>
-                <p>Thương hiệu nổi bật</p>
-                <p><a href="#contact-complaints" style="text-decoration:none; color:inherit; cursor:pointer;">Liên hệ &
-                        khiếu nại</a></p>
-                <p><a href="#transaction-terms" style="text-decoration:none; color:inherit; cursor:pointer;">Điều khoản
-                        giao dịch</a></p>
+                <p><a href="about.html" style="text-decoration:none; color:inherit; cursor:pointer;">Giới thiệu về
+                        LavaWhey</a></p>
+                <p><a href="about.html#featured-brands"
+                        style="text-decoration:none; color:inherit; cursor:pointer;">Thương hiệu nổi bật</a></p>
+                <p><a href="about.html#contact-complaints"
+                        style="text-decoration:none; color:inherit; cursor:pointer;">Liên hệ & khiếu nại</a></p>
+                <p><a href="about.html#transaction-terms"
+                        style="text-decoration:none; color:inherit; cursor:pointer;">Điều khoản giao dịch</a></p>
             </div>
             <div class="footer-section">
                 <h3>Chính sách chung</h3>
@@ -3376,6 +2590,15 @@
             });
         });
 
+        // Add to cart functionality
+        document.querySelectorAll('.buy-button').forEach(button => {
+            button.addEventListener('click', function () {
+                const product = this.parentElement;
+                const productName = product.querySelector('h3').textContent;
+                alert(`Đã thêm ${productName} vào giỏ hàng!`);
+            });
+        });
+
         // Modal Functionality
         document.addEventListener('DOMContentLoaded', function () {
             // Use global auth manager (same behavior across pages)
@@ -3474,6 +2697,8 @@
                 });
             }
 
+
+
             // Handle direct access to anchor links
             if (window.location.hash) {
                 const targetElement = document.querySelector(window.location.hash);
@@ -3486,8 +2711,187 @@
                 }
             }
         });
+
+        // Cart được xử lý bởi js/cart-shared.js
+
+        // Hiển thị danh sách mã giảm giá đang hoạt động
+        function renderActiveCoupons() {
+            const promoSection = document.getElementById('promotion-section') || document.querySelector('.promotion-section');
+            if (!promoSection) return;
+            const now = new Date();
+            firebase.database().ref('coupons').once('value').then(snap => {
+                const coupons = snap.val() || {};
+                const activeCoupons = Object.values(coupons).filter(coupon => {
+                    if (coupon.status !== 'active') return false;
+                    const start = new Date(coupon.startDate);
+                    const end = new Date(coupon.endDate);
+                    return now >= start && now <= end;
+                });
+                if (activeCoupons.length === 0) {
+                    promoSection.innerHTML = '<div style="text-align:center;font-size:1.2rem;color:#888;">Hiện chưa có mã giảm giá nào đang hoạt động.</div>';
+                    return;
+                }
+                promoSection.innerHTML = `
+                    <h2 style="text-align:center;margin-bottom:32px;color:#FF6B00;">Mã giảm giá đang hoạt động</h2>
+                    <div class="voucher-container">
+                        ${activeCoupons.map(coupon => `
+                            <div class="voucher-card">
+                                <div class="voucher-left">
+                                    <div class="discount">${coupon.type === 'percent' ? coupon.discount + '%' : coupon.discount.toLocaleString('vi-VN') + '₫'}</div>
+                                    <div class="discount-text">${coupon.type === 'percent' ? 'Giảm giá' : 'Giảm trực tiếp'}</div>
+                                </div>
+                                <div class="voucher-right">
+                                    <h3>${coupon.code}</h3>
+                                    <p>${coupon.description || ''}</p>
+                                    <div class="voucher-info">
+                                        <span><i class="fas fa-calendar-alt"></i> ${coupon.startDate} - ${coupon.endDate}</span>
+                                        <span><i class="fas fa-tag"></i> ${coupon.type === 'percent' ? 'Phần trăm' : 'Số tiền'}</span>
+                                    </div>
+                                    <button class="copy-button" data-code="${coupon.code}"><i class="fas fa-copy"></i> Sao chép mã</button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                // Thêm sự kiện copy mã
+                promoSection.querySelectorAll('.copy-button').forEach(btn => {
+                    btn.addEventListener('click', function () {
+                        const code = this.getAttribute('data-code');
+                        navigator.clipboard.writeText(code);
+                        Swal.fire('Đã sao chép!', `Mã <b>${code}</b> đã được sao chép.`, 'success');
+                    });
+                });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            renderActiveCoupons();
+        });
+
+        // Hiển thị tin tức từ Firebase
+        function renderNewsList() {
+            const newsList = document.getElementById('news-list');
+            newsList.innerHTML = '<div style="text-align:center;color:#888;">Đang tải tin tức...</div>';
+            firebase.database().ref('news').once('value').then(snap => {
+                const news = snap.val() || {};
+                const newsArr = Object.values(news).sort((a, b) => new Date(b.date) - new Date(a.date));
+                if (newsArr.length === 0) {
+                    newsList.innerHTML = '<div style="text-align:center;color:#888;">Chưa có tin tức nào.</div>';
+                    return;
+                }
+                newsList.innerHTML = newsArr.map(item => `
+                    <div class="news-card" data-id="${item.id}" style="background:#fff;border-radius:12px;box-shadow:0 4px 16px rgba(0,0,0,0.08);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow 0.2s;margin-bottom:24px;cursor:pointer;">
+                        <img src="${item.image}" alt="${item.title}" style="width:100%;height:200px;object-fit:cover;">
+                        <div style="padding:20px;flex:1;display:flex;flex-direction:column;">
+                            <h3 style="font-size:1.3rem;color:#FF6B00;margin-bottom:10px;">${item.title}</h3>
+                            <p style="color:#555;flex:1;">${item.description}</p>
+                            <div style="font-size:0.95em;color:#888;margin:10px 0 0;">
+                                <i class="fas fa-calendar-alt"></i> ${item.date} &nbsp;|&nbsp; <i class="fas fa-user"></i> ${item.author}
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                // Sự kiện click vào card để đọc chi tiết
+                document.querySelectorAll('.news-card').forEach(card => {
+                    card.addEventListener('click', function () {
+                        const id = this.getAttribute('data-id');
+                        const newsItem = newsArr.find(n => n.id === id);
+                        if (newsItem) showNewsModal(newsItem);
+                    });
+                });
+            });
+        }
+        function showNewsModal(item) {
+            const modal = document.getElementById('news-modal');
+            const body = document.getElementById('modal-body');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+            body.innerHTML = `
+                <div class="modal-img-wrap">
+                    <img src="${item.image}" alt="${item.title}" class="modal-img">
+                    <div class="modal-img-overlay">
+                        <div class="modal-title">${item.title}</div>
+                        <div class="modal-meta">
+                            <span><i class='fas fa-calendar-alt'></i> ${item.date}</span>
+                            <span><i class='fas fa-user'></i> ${item.author}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-content-text">${item.content}</div>
+                <div class="modal-tags">
+                    ${(item.tags || []).map(tag => `<span class='modal-tag'>#${tag}</span>`).join('')}
+                </div>
+            `;
+            modal.querySelector('.close-modal').onclick = function () {
+                modal.classList.remove('show');
+                document.body.style.overflow = '';
+            };
+            window.onclick = function (e) {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+            };
+        }
+        document.addEventListener('DOMContentLoaded', function () {
+            renderNewsList();
+        });
+
+        // Lấy tham số id trên URL
+        function getQueryParam(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+
+        // Hiển thị chi tiết tin tức nếu có id trên URL
+        async function renderNewsDetailById(id) {
+            const newsList = document.getElementById('news-list');
+            const newsDetail = document.getElementById('news-detail');
+            newsList.style.display = 'none';
+            newsDetail.style.display = 'block';
+            newsDetail.innerHTML = '<div style="text-align:center;color:#888;">Đang tải chi tiết tin...</div>';
+            try {
+                const snap = await firebase.database().ref('news/' + id).once('value');
+                const item = snap.val();
+                if (!item) {
+                    newsDetail.innerHTML = '<div style="text-align:center;color:#888;">Không tìm thấy tin tức.</div>';
+                    return;
+                }
+                newsDetail.innerHTML = `
+                    <div style="background:#fff;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.08);overflow:hidden;max-width:800px;margin:32px auto 32px auto;padding:0 0 32px 0;">
+                        <div style="width:100%;height:320px;overflow:hidden;border-radius:16px 16px 0 0;">
+                            <img src="${item.image}" alt="${item.title}" style="width:100%;height:100%;object-fit:cover;">
+                        </div>
+                        <div style="padding:32px 24px 0 24px;">
+                            <h1 style="font-size:2.2rem;color:#FF6B00;margin-bottom:12px;">${item.title}</h1>
+                            <div style="color:#888;font-size:1.05em;margin-bottom:18px;">
+                                <i class="fas fa-calendar-alt"></i> ${item.date} &nbsp;|&nbsp; <i class="fas fa-user"></i> ${item.author}
+                            </div>
+                            <div style="font-size:1.18em;color:#333;margin-bottom:18px;">${item.description}</div>
+                            <div style="font-size:1.15em;line-height:1.8;color:#222;margin-bottom:18px;">${item.content}</div>
+                            <div style="margin-top:10px;">${(item.tags || []).map(tag => `<span style='display:inline-block;background:#FFF3E6;color:#FF6B00;padding:6px 16px;border-radius:16px;margin-right:8px;font-size:1em;font-weight:500;margin-bottom:4px;box-shadow:0 1px 4px rgba(255,107,0,0.07);'>#${tag}</span>`).join('')}</div>
+                            <div style="margin-top:32px;"><a href="news.html" style="color:#FF6B00;font-weight:600;text-decoration:underline;font-size:1.1em;">← Quay lại danh sách tin tức</a></div>
+                        </div>
+                    </div>
+                `;
+            } catch (err) {
+                newsDetail.innerHTML = '<div style="text-align:center;color:#888;">Lỗi tải chi tiết tin tức.</div>';
+            }
+        }
+
+        // Nếu có id trên URL thì hiển thị chi tiết, ngược lại hiển thị danh sách
+        const newsId = getQueryParam('id');
+        document.addEventListener('DOMContentLoaded', function () {
+            if (newsId) {
+                renderNewsDetailById(newsId);
+            } else {
+                document.getElementById('news-list').style.display = 'block';
+                const newsDetail = document.getElementById('news-detail');
+                if (newsDetail) newsDetail.style.display = 'none';
+                renderNewsList();
+            }
+        });
     </script>
-    <script src="js/cart-shared.js"></script>
+    <script src="../js/cart-shared.js"></script>
     <!-- AI Chatbox -->
     <script src="https://app.tudongchat.com/js/chatbox.js"></script>
     <script>

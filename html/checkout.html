@@ -15,12 +15,12 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
     <!-- Tìm kiếm & header đồng bộ với các trang khác -->
-    <script src="search_new.js"></script>
+    <script src="../js/search_new.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <script src="mobile.js"></script>
-    <link rel="stylesheet" href="mobile.css">
-    <link rel="stylesheet" href="search.css">
+    <script src="../js/mobile.js"></script>
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/search.css">
     <style>
         :root {
             --primary-color: #FF6B00;
@@ -508,11 +508,11 @@
             position: relative;
         }
     </style>
-    <script src="js/auth-global.js"></script>
-    <script src="js/marquee.js" charset="UTF-8"></script>
-    <script src="js/stock-sync.js"></script>
-    <link rel="stylesheet" href="modals.css">
-    <link rel="stylesheet" href="header.css">
+    <script src="../js/auth-global.js"></script>
+    <script src="../js/marquee.js" charset="UTF-8"></script>
+    <script src="../js/stock-sync.js"></script>
+    <link rel="stylesheet" href="../css/modals.css">
+    <link rel="stylesheet" href="../css/header.css">
 </head>
 
 <body>
@@ -537,7 +537,7 @@
         <nav class="navbar">
             <div class="logo">
                 <a href="index.html">
-                    <img src="images/logo.png.png" alt="LavaWhey Logo">
+                    <img src="../images/logo.png.png" alt="LavaWhey Logo">
                 </a>
             </div>
             <ul class="nav-links">
@@ -1145,7 +1145,7 @@
             const vnp_HashSecret = "XNBCJFAKAZQSGTARRLGCHVZWCIOIGSHN";
             const vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 
-            const vnp_ReturnUrl = window.location.origin + "/vnpay_return.html";
+            const vnp_ReturnUrl = window.location.origin + "/html/vnpay_return.html";
 
             // Lấy địa chỉ IP của người dùng
             async function getClientIp() {
@@ -1177,6 +1177,7 @@
                 vnp_ReturnUrl: vnp_ReturnUrl,
                 vnp_IpAddr: await getClientIp(),
                 vnp_CreateDate: moment().format('YYYYMMDDHHmmss'),
+                vnp_ExpireDate: moment().add(15, 'minutes').format('YYYYMMDDHHmmss'),
                 vnp_BankCode: 'VNBANK' // Bắt buộc chuyển thẳng sang giao diện chọn Thẻ ATM/Tài khoản ngân hàng
             };
 

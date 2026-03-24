@@ -7,6 +7,9 @@
     <meta http-equiv="Cross-Origin-Opener-Policy" content="same-origin-allow-popups">
     <meta http-equiv="Cross-Origin-Embedder-Policy" content="require-corp">
     <title>LavaWhey - Thực phẩm bổ sung chất lượng cao</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔥</text></svg>"
+        type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap"
@@ -16,14 +19,19 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
     <!-- Firebase SDK -->
+    <!-- Firebase App (cho mọi ứng dụng Firebase) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <!-- Firebase Authentication (xác thực người dùng) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <!-- Firebase Realtime Database (cơ sở dữ liệu Firebase) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    <script src="search_new.js"></script>
-    <link rel="stylesheet" href="search.css">
-    <script src="mobile.js"></script>
-    <link rel="stylesheet" href="mobile.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+    <script src="../js/search_new.js"></script>
+    <script src="../js/mobile.js"></script>
+    <link rel="stylesheet" href="../css/mobile.css">
+    <link rel="stylesheet" href="../css/search.css">
+    <link rel="stylesheet" href="../css/reviews.css">
     <style>
         /* Reset CSS */
         * {
@@ -66,7 +74,6 @@
             justify-content: center;
             text-align: center;
             color: white;
-
             overflow: hidden;
         }
 
@@ -168,37 +175,41 @@
 
         .featured-products .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .featured-products .product-card {
             background: #fff;
-            border-radius: 15px;
+            border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             position: relative;
             display: flex;
             flex-direction: column;
-            padding-bottom: 20px;
+            padding-bottom: 0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
         }
 
         .featured-products .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
         }
 
         .featured-products .product-card img {
             width: 100%;
-            height: 250px;
+            height: 320px;
             object-fit: contain;
-            background-color: #f8f8f8;
-            padding: 20px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
             transition: transform 0.3s ease;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
 
         .featured-products .product-card:hover img {
@@ -206,11 +217,17 @@
         }
 
         .featured-products .product-card h3 {
-            padding: 1.5rem 1.5rem 0.5rem;
-            font-size: 1.2rem;
+            padding: 0 1.5rem 1.5rem;
+            font-size: 1.3rem;
             color: var(--dark-color);
             font-weight: 600;
-            margin-bottom: 10px;
+            margin: 0;
+            text-align: center;
+            line-height: 1.4;
+            min-height: 3.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .featured-products .product-card .price {
@@ -528,31 +545,48 @@
             }
         }
 
+        .news-grid.news-slider {
+            min-height: 420px;
+            /* Đảm bảo chiều cao tối thiểu cho grid slider, có thể điều chỉnh nếu cần */
+        }
+
         .news-card {
+            height: 100%;
+            min-height: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
             background: var(--gray-color);
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             overflow: hidden;
             transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .news-card a {
             display: flex;
             flex-direction: column;
+            height: 100%;
         }
 
         .news-card img {
             width: 100%;
             height: 180px;
             object-fit: cover;
+            flex-shrink: 0;
         }
 
         .news-card h3 {
             font-size: 1.3rem;
             margin: 1rem 1.2rem 0.5rem 1.2rem;
             color: var(--dark-color);
+            min-height: 48px;
         }
 
         .news-card p {
             margin: 0 1.2rem 1rem 1.2rem;
             color: #555;
+            min-height: 48px;
             flex: 1;
         }
 
@@ -563,6 +597,8 @@
             text-decoration: none;
             font-weight: 500;
             transition: color 0.2s;
+            align-self: flex-start;
+            margin-top: auto;
         }
 
         .read-more:hover {
@@ -1702,97 +1738,729 @@
             transform: translateY(-2px);
         }
 
-        /* Style cho stores-section */
-        .stores-section {
-            padding: 4rem 5%;
+        .news-pagination .news-page-btn {
+            background: #fff;
+            border: 2px solid #FF6B00;
+            color: #FF6B00;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .news-pagination .news-page-btn.active {
+            background: #FF6B00;
+            color: #fff;
+        }
+
+        .news-next-btn:hover {
+            background: #FF8533 !important;
+        }
+
+        @media (max-width: 900px) {
+            .news-next-btn {
+                right: -20px !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .news-next-btn {
+                right: 0 !important;
+                top: 100%;
+                transform: translateY(0);
+                margin-top: 10px;
+            }
+
+            .news-pagination {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+
+    <!-- Top Rated & Best Sellers CSS -->
+    <style>
+        /* ==================== TOP RATED SECTION ==================== */
+
+        .top-rated-section {
+            padding: 5rem 5%;
             background-color: var(--gray-color);
         }
 
-        .stores-section h2 {
+        .top-rated-section h2 {
             text-align: center;
-            font-size: 2.2rem;
+            font-size: 2.5rem;
             margin-bottom: 3rem;
-            color: var(--primary-color);
+            color: var(--dark-color);
         }
 
-        .stores-container {
-            max-width: 800px;
+        .top-rated-header {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            position: relative;
+        }
+
+        .top-rated-header h2 {
+            margin: 0;
+        }
+
+        .top-rated-nav {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .top-rated-nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 107, 0, 0.35);
+            background: #fff;
+            color: #FF6B00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.15s ease, background 0.15s ease, opacity 0.15s ease;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .top-rated-nav-btn:hover:not(:disabled) {
+            background: rgba(255, 107, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .top-rated-nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .top-rated-slider-wrapper {
+            max-width: 1200px;
             margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+            padding: 0 6px;
         }
 
-        .store-card {
-            background: var(--light-color);
-            padding: 2.5rem;
-            margin-bottom: 2rem;
+        /* Track */
+        #topRatedGrid {
+            display: flex;
+            gap: 28px;
+            transition: transform 0.5s cubic-bezier(.77, 0, .18, 1);
+            will-change: transform;
+            padding: 6px 0 14px;
+        }
+
+        /* Card (rendered by reviews.js) */
+        .top-rated-card {
+            flex: 0 0 calc((100% - 56px) / 3);
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .top-rated-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+        }
+
+        .top-rated-card .card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8533 100%);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            z-index: 2;
+        }
+
+        .top-rated-card .card-img {
+            width: 100%;
+            height: 320px;
+            object-fit: contain;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            margin-bottom: 12px;
             border-radius: 15px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease;
         }
 
-        .store-card h3 {
-            font-size: 2rem;
-            color: var(--primary-color);
-            margin-bottom: 2rem;
+        .top-rated-card:hover .card-img {
+            transform: scale(1.05);
         }
 
-        .store-card p {
+        .top-rated-card .card-body {
+            padding: 0 1.5rem 1.25rem;
+            text-align: center;
+        }
+
+        .top-rated-card .card-name {
             font-size: 1.2rem;
             color: var(--dark-color);
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
+            font-weight: 700;
+            line-height: 1.4;
+            min-height: 3.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
         }
 
-        .store-card a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-size: 1.2rem;
-            font-weight: 500;
-            transition: color 0.3s ease;
+        .top-rated-card .card-rating {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            color: #666;
+            font-size: 0.95rem;
         }
 
-        .store-card a:hover {
-            color: var(--secondary-color);
+        .top-rated-card .card-rating .stars i {
+            color: #FFB300;
         }
 
-        /* Style cho FAQ section */
-        .faq-section {
-            padding: 4rem 5%;
-            background-color: var(--light-color);
+        .top-rated-card .card-price {
+            color: #FF6B00;
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-top: 4px;
         }
 
-        .faq-section h2 {
-            text-align: center;
-            font-size: 2.2rem;
-            margin-bottom: 3rem;
-            color: var(--primary-color);
+        .top-rated-card .card-category {
+            margin-top: 6px;
+            color: #888;
+            font-size: 0.9rem;
         }
 
-        .faq-container {
-            max-width: 800px;
+        .top-rated-section .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        .faq-item {
-            margin-bottom: 3rem;
+        .top-rated-section .product-card {
+            background: #fff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
         }
 
-        .faq-item h3 {
-            font-size: 1.5rem;
+        .top-rated-section .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+        }
+
+        .top-rated-section .product-card img {
+            width: 100%;
+            height: 320px;
+            object-fit: contain;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .top-rated-section .product-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .top-rated-section .product-card h3 {
+            padding: 0 1.5rem 1.5rem;
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            font-weight: 600;
+            margin: 0;
+            text-align: center;
+            line-height: 1.4;
+            min-height: 3.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .top-rated-section .product-card .price {
+            color: #FF6B00;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 0.5rem 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .best-seller-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .best-seller-badge {
+            background: linear-gradient(135deg, #FF6B00 0%, #FF8533 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .best-seller-badge i {
+            font-size: 0.75rem;
+        }
+
+        @media (max-width: 768px) {
+            .top-rated-section {
+                padding: 30px 4%;
+            }
+
+            .top-rated-header {
+                margin-bottom: 20px;
+            }
+
+            .top-rated-nav {
+                right: 0;
+            }
+
+            .top-rated-card {
+                flex-basis: calc((100% - 28px) / 2);
+            }
+
+            .top-rated-card .card-img {
+                height: 220px;
+                padding: 16px;
+            }
+
+            .top-rated-card .card-name {
+                font-size: 1rem;
+                min-height: 2.8rem;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .top-rated-nav {
+                position: static;
+                transform: none;
+            }
+
+            .top-rated-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .top-rated-card {
+                flex-basis: 100%;
+            }
+
+            .top-rated-card .card-img {
+                height: 200px;
+            }
+        }
+    </style>
+
+    <script src="../js/auth-global.js"></script>
+    <script src="../js/marquee.js" charset="UTF-8"></script>
+    <link rel="stylesheet" href="../css/modals.css">
+    <link rel="stylesheet" href="../css/header.css">
+    <style>
+        /* Modern Tools Styling */
+        .tools-section {
+            padding: 4rem 5% 6rem;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: calc(100vh - 155px);
+        }
+
+        .tools-header {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 3.5rem;
+        }
+
+        .tools-header h1 {
+            font-size: 3rem;
             color: var(--dark-color);
             margin-bottom: 1.2rem;
+            font-weight: 800;
+            background: linear-gradient(45deg, #333, #FF6B00);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .faq-item p {
+
+        .tools-header p {
             font-size: 1.2rem;
             color: #666;
             line-height: 1.6;
         }
-    </style>
 
-    <script src="js/auth-global.js"></script>
-    <script src="js/marquee.js" charset="UTF-8"></script>
-    <link rel="stylesheet" href="modals.css">
-    <link rel="stylesheet" href="header.css">
+        .tools-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .tabs-header {
+            display: flex;
+            background: #f1f3f5;
+            padding: 10px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            background: transparent;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            border-radius: 14px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .tab-btn i {
+            font-size: 1.2rem;
+        }
+
+        .tab-btn.active {
+            background: #fff;
+            color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 50px;
+            align-items: start;
+        }
+
+        @media (max-width: 850px) {
+            .calculator-grid {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+        }
+
+        .calc-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: #444;
+            font-size: 0.95rem;
+        }
+
+        .input-group input,
+        .input-group select {
+            padding: 14px 18px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafafa;
+            color: #333;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.1);
+        }
+
+        .gender-group {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .gender-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .gender-option input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .gender-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            background: #f8f9fa;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .gender-option input:checked+.gender-label {
+            border-color: var(--primary-color);
+            background: rgba(255, 107, 0, 0.05);
+            color: var(--primary-color);
+        }
+
+        .calc-btn {
+            background: linear-gradient(45deg, #FF6B00, #FF8533);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(255, 107, 0, 0.2);
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(255, 107, 0, 0.3);
+            background: linear-gradient(45deg, #FF8533, #FF6B00);
+        }
+
+        .result-container {
+            background: #f8f9fa;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            border: 2px dashed #eee;
+            transition: all 0.5s ease;
+            height: 100%;
+            justify-content: center;
+        }
+
+        .result-container.active {
+            background: #fff;
+            border: 2px solid var(--primary-color);
+            border-style: solid;
+            box-shadow: 0 10px 30px rgba(255, 107, 0, 0.1);
+        }
+
+        .result-label {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .result-value {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--dark-color);
+            line-height: 1;
+            margin: 10px 0;
+            font-family: 'Be Vietnam Pro', sans-serif;
+        }
+
+        .result-status {
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            background: #eee;
+            color: #666;
+        }
+
+        .status-underweight {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-normal {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-overweight {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status-obese {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .bmi-scale {
+            display: flex;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .scale-part {
+            flex: 1;
+            height: 100%;
+        }
+
+        .scale-1 {
+            background: #1976d2;
+        }
+
+        /* Thiếu cân */
+        .scale-2 {
+            background: #2e7d32;
+        }
+
+        /* Bình thường */
+        .scale-3 {
+            background: #ef6c00;
+        }
+
+        /* Thừa cân */
+        .scale-4 {
+            background: #c62828;
+        }
+
+        /* Béo phì */
+
+        .tdee-info {
+            width: 100%;
+            margin-top: 20px;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tdee-info h4 {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+
+        .tdee-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .tdee-row:hover {
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transform: scale(1.02);
+        }
+
+        .tdee-row span:first-child {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .tdee-row span:last-child {
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 1.1rem;
+        }
+
+        .tdee-row.highlight {
+            background: rgba(255, 107, 0, 0.05);
+            border: 1px solid rgba(255, 107, 0, 0.1);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
+
 
 <body>
     <!-- Header -->
@@ -1817,7 +2485,7 @@
         <nav class="navbar">
             <div class="logo">
                 <a href="index.html">
-                    <img src="images/logo.png.png" alt="LavaWhey Logo">
+                    <img src="../images/logo.png.png" alt="LavaWhey Logo">
                 </a>
             </div>
             <ul class="nav-links">
@@ -1826,9 +2494,9 @@
                 <li><a href="products.html">Sản phẩm</a></li>
                 <li><a href="news.html">Tin tức</a></li>
                 <li><a href="about.html">Giới thiệu</a></li>
-                <li><a href="contact.html" class="active">Liên hệ</a></li>
+                <li><a href="contact.html">Liên hệ</a></li>
                 <li><a href="policy.html">Chính sách</a></li>
-                <li><a href="tools.html">Công cụ</a></li>
+                <li><a href="tools.html" class="active">Công cụ</a></li>
             </ul>
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm..." class="search-input">
@@ -1880,112 +2548,129 @@
         </nav>
     </header>
 
-
-    <section class="hero">
-        <img src="https://images.unsplash.com/photo-1571902943202-507ec2618e8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80"
-            alt="Contact Hero" class="hero-image">
-        <div class="hero-overlay"></div>
-        <div class="hero-content">
-            <h1>Câu chuyên của Chúng Tôi</h1>
-            <p>LavaWhey</p>
-            <a href="#contact-form" class="cta-button">Gửi Tin Nhắn Ngay</a>
+    <main class="tools-section">
+        <div class="tools-header">
+            <h1>Công cụ hỗ trợ mục tiêu của bạn</h1>
+            <p>Tính toán các chỉ số cơ bản để tối ưu hóa quá trình luyện tập và dinh dưỡng.</p>
         </div>
-    </section>
 
-    <section class="contact-section">
-        <h2>Liên Hệ Với Chúng Tôi</h2>
-        <div class="contact-container">
-            <div class="contact-info">
-                <h3>Thông Tin Liên Hệ</h3>
-                <p><i class="fas fa-map-marker-alt"></i> Hẻm 112/12, Đường 3/2, Hưng Lợi, Ninh Kiều, TP.Cần Thơ</p>
-                <p><i class="fas fa-phone"></i> Hotline: <a href="tel:0847788360" class="contact-link">0847 788 360</a>
-                </p>
-                <p><i class="fas fa-envelope"></i> Email: <a href="mailto:LavaWhey@gmail.com"
-                        class="contact-link">LavaWhey@gmail.com</a></p>
-                <p><i class="fas fa-clock"></i> Giờ làm việc: 8:00 - 22:00</p>
-                <div class="social-links">
-                    <a href="#"><i class="fab fa-facebook"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
-                    <a href="#"><i class="fab fa-tiktok"></i></a>
+        <div class="tools-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="bmi">
+                    <i class="fas fa-weight"></i> Tính BMI
+                </button>
+                <button class="tab-btn" data-tab="tdee">
+                    <i class="fas fa-fire"></i> Tính TDEE
+                </button>
+            </div>
+
+            <!-- BMI Tab -->
+            <div id="bmi" class="tab-content active">
+                <div class="calculator-grid">
+                    <div class="calc-inputs">
+                        <div class="input-group">
+                            <label><i class="fas fa-arrows-alt-v"></i> Chiều cao (cm)</label>
+                            <input type="number" id="bmi-height" placeholder="Ví dụ: 175" min="50" max="250">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-weight-hanging"></i> Cân nặng (kg)</label>
+                            <input type="number" id="bmi-weight" placeholder="Ví dụ: 70" min="20" max="300">
+                        </div>
+                        <button class="calc-btn" onclick="calculateBMI()">
+                            <i class="fas fa-calculator"></i> Tính BMI ngay
+                        </button>
+                    </div>
+                    <div class="result-container" id="bmi-result-card">
+                        <span class="result-label">Chỉ số BMI của bạn</span>
+                        <div class="result-value" id="bmi-value">--.-</div>
+                        <div id="bmi-status" class="result-status">Chưa có kết quả</div>
+
+                        <div class="bmi-scale">
+                            <div class="scale-part scale-1" title="Thiếu cân (< 18.5)"></div>
+                            <div class="scale-part scale-2" title="Bình thường (18.5 - 24.9)"></div>
+                            <div class="scale-part scale-3" title="Thừa cân (25 - 29.9)"></div>
+                            <div class="scale-part scale-4" title="Béo phì (>= 30)"></div>
+                        </div>
+
+                        <p style="margin-top: 5px; font-size: 0.9rem; color: #888; text-align: left;">
+                            <i class="fas fa-info-circle"></i> <strong>BMI (Body Mass Index)</strong> là chỉ số khối cơ
+                            thể giúp xác định mức cân nặng so với chiều cao.
+                        </p>
+                    </div>
                 </div>
             </div>
-            <div class="contact-form" id="contact-form">
-                <h2>Gửi Tin Nhắn Cho Chúng Tôi</h2>
-                <form>
-                    <div class="form-group">
-                        <label for="name">Họ và tên</label>
-                        <input type="text" id="name" required placeholder="Nhập họ và tên của bạn">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" required placeholder="Nhập email của bạn">
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Số điện thoại</label>
-                        <input type="tel" id="phone" required placeholder="Nhập số điện thoại của bạn">
-                    </div>
-                    <div class="form-group">
-                        <label for="message">Nội dung</label>
-                        <textarea id="message" required placeholder="Nhập nội dung tin nhắn của bạn"></textarea>
-                    </div>
-                    <button type="submit" class="submit-button">Gửi Tin Nhắn</button>
-                </form>
-            </div>
-        </div>
-    </section>
 
-    <!-- Hệ Thống Cửa Hàng -->
-    <section class="stores-section">
-        <h2>Hệ Thống Cửa Hàng</h2>
-        <div class="stores-container">
-            <div class="store-card">
-                <h3>Cần Thơ</h3>
-                <p>Hẻm 112/12, Đường 3/2, Hưng Lợi, Ninh Kiều</p>
-                <p>0847 788 360</p>
-                <p>8:00 - 22:00</p>
-                <div
-                    style="width: 100%; height: 300px; margin-bottom: 1rem; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                    <iframe
-                        src="https://www.google.com/maps?q=Hẻm+112/12,+Đường+3/2,+Hưng+Lợi,+Ninh+Kiều,+Cần+Thơ&output=embed"
-                        width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <!-- TDEE Tab -->
+            <div id="tdee" class="tab-content">
+                <div class="calculator-grid">
+                    <div class="calc-inputs">
+                        <div class="gender-group">
+                            <div class="gender-option">
+                                <input type="radio" name="gender" id="male" value="male" checked>
+                                <label for="male" class="gender-label">
+                                    <i class="fas fa-mars" style="margin-right: 8px;"></i> Nam
+                                </label>
+                            </div>
+                            <div class="gender-option">
+                                <input type="radio" name="gender" id="female" value="female">
+                                <label for="female" class="gender-label">
+                                    <i class="fas fa-venus" style="margin-right: 8px;"></i> Nữ
+                                </label>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-user-clock"></i> Tuổi</label>
+                            <input type="number" id="tdee-age" placeholder="Ví dụ: 25" min="10" max="100">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-arrows-alt-v"></i> Chiều cao (cm)</label>
+                            <input type="number" id="tdee-height" placeholder="Ví dụ: 175" min="50" max="250">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-weight-hanging"></i> Cân nặng (kg)</label>
+                            <input type="number" id="tdee-weight" placeholder="Ví dụ: 70" min="20" max="300">
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-running"></i> Mức độ hoạt động</label>
+                            <select id="activity">
+                                <option value="1.2">Ít vận động (Văn phòng, không tập thể dục)</option>
+                                <option value="1.375">Vận động nhẹ (Tập nhẹ 1-3 buổi/tuần)</option>
+                                <option value="1.55">Vận động vừa (Tập trung bình 3-5 buổi/tuần)</option>
+                                <option value="1.725">Vận động mạnh (Tập nặng 6-7 buổi/tuần)</option>
+                                <option value="1.9">Vận động cực mạnh (VĐV, lao động nặng)</option>
+                            </select>
+                        </div>
+                        <button class="calc-btn" onclick="calculateTDEE()">
+                            <i class="fas fa-bolt"></i> Tính TDEE ngay
+                        </button>
+                    </div>
+                    <div class="result-container" id="tdee-result-card">
+                        <span class="result-label">Năng lượng tiêu thụ hàng ngày</span>
+                        <div class="result-value" id="tdee-value">----</div>
+                        <span class="result-label" style="margin-top: -10px;">Calories / ngày</span>
+
+                        <div class="tdee-info" id="tdee-breakdown" style="display: none;">
+                            <h4><i class="fas fa-bullseye"></i> Gợi ý theo mục tiêu:</h4>
+                            <div class="tdee-row">
+                                <span><i class="fas fa-arrow-down"></i> Giảm cân:</span>
+                                <span id="tdee-lose">---- kcal</span>
+                            </div>
+                            <div class="tdee-row highlight">
+                                <span><i class="fas fa-equals"></i> Duy trì:</span>
+                                <span id="tdee-maintain">---- kcal</span>
+                            </div>
+                            <div class="tdee-row">
+                                <span><i class="fas fa-arrow-up"></i> Tăng cân:</span>
+                                <span id="tdee-gain">---- kcal</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p><a href="https://maps.google.com/?q=Hẻm+112/12,+Đường+3/2,+Hưng+Lợi,+Ninh+Kiều,+Cần+Thơ"
-                        target="_blank">Xem Bản Đồ</a></p>
-            </div>
-    </section>
-
-    <!-- Câu Hỏi Thường Gặp -->
-    <section class="faq-section">
-        <h2>Câu Hỏi Thường Gặp</h2>
-        <div class="faq-container">
-            <div class="faq-item">
-                <h3>Làm thế nào để đặt hàng?</h3>
-                <p>Bạn có thể đặt hàng trực tiếp tại website hoặc gọi điện thoại đến hotline của chúng tôi. Chúng tôi sẽ
-                    hỗ trợ bạn 24/7.</p>
             </div>
 
-            <div class="faq-item">
-                <h3>Thời gian giao hàng là bao lâu?</h3>
-                <p>Thời gian giao hàng từ 1-3 ngày làm việc tùy thuộc vào khu vực của bạn. Chúng tôi cam kết giao hàng
-                    nhanh chóng và an toàn.</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>Chính sách đổi trả như thế nào?</h3>
-                <p>Chúng tôi chấp nhận đổi trả trong vòng 7 ngày nếu sản phẩm còn nguyên seal và không bị hư hỏng.</p>
-            </div>
-
-            <div class="faq-item">
-                <h3>Các phương thức thanh toán?</h3>
-                <p>Chúng tôi chấp nhận thanh toán qua thẻ tín dụng, chuyển khoản ngân hàng, và tiền mặt khi nhận hàng.
-                </p>
-            </div>
         </div>
-    </section>
+    </main>
 
-    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-section">
@@ -2001,27 +2686,19 @@
             </div>
             <div class="footer-section">
                 <h3>Chính sách chung</h3>
-                <p><a href="policy.html#data-policy" style="text-decoration:none; color:inherit; cursor:pointer;">Chính
-                        sách dữ liệu</a></p>
-                <p><a href="policy.html#privacy-policy"
-                        style="text-decoration:none; color:inherit; cursor:pointer;">Chính sách bảo mật</a></p>
-                <p><a href="policy.html#business-policy"
-                        style="text-decoration:none; color:inherit; cursor:pointer;">Chính sách kinh doanh</a></p>
-                <p><a href="policy.html#shipping-policy"
-                        style="text-decoration:none; color:inherit; cursor:pointer;">Chính sách vận chuyển</a></p>
-                <p><a href="policy.html#warranty-policy"
-                        style="text-decoration:none; color:inherit; cursor:pointer;">Chính sách bảo hành</a></p>
-                <p><a href="policy.html#return-policy"
-                        style="text-decoration:none; color:inherit; cursor:pointer;">Chính sách đổi trả</a></p>
+                <p>Chính sách dữ liệu</p>
+                <p>Chính sách bảo mật</p>
+                <p>Chính sách kinh doanh</p>
+                <p>Chính sách vận chuyển</p>
+                <p>Chính sách bảo hành</p>
+                <p>Chính sách đổi trả</p>
             </div>
             <div class="footer-section">
                 <h3>Hỗ trợ khách hàng</h3>
                 <p>Facebook: LavaWhey</p>
                 <p>Instagram: @LavaWhey</p>
-                <p><i class="fas fa-headset"></i> Hotline: <a href="tel:0847788360" class="contact-link">0847 788
-                        360</a></p>
-                <p><i class="fas fa-envelope"></i> Email: <a href="mailto:LavaWhey@gmail.com"
-                        class="contact-link">LavaWhey@gmail.com</a></p>
+                <p><i class="fas fa-headset"></i> Hotline: 0847 788 360</p>
+                <p><i class="fas fa-envelope"></i> Email: LavaWhey@gmail.com</p>
                 <p><i class="fas fa-question-circle"></i> Hẻm 112/12, Đường 3/2, Hưng Lợi, Ninh Kiều, TP.Cần Thơ</p>
             </div>
             <div class="footer-section">
@@ -2038,352 +2715,103 @@
         </div>
     </footer>
 
-    <!-- Auth Modals -->
-    <div class="modal" id="loginModal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-header">
-                <h2>Đăng nhập</h2>
-            </div>
-            <div class="modal-body">
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="loginEmail">Email</label>
-                        <input type="email" id="loginEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="loginPassword">Mật khẩu</label>
-                        <input type="password" id="loginPassword" required>
-                    </div>
-                    <div class="form-options">
-                        <label>
-                            <input type="checkbox"> Ghi nhớ đăng nhập
-                        </label>
-                        <a href="#" class="forgot-password">Quên mật khẩu?</a>
-                    </div>
-                    <button type="submit" class="submit-button">Đăng nhập</button>
-                    <div class="social-login">
-                        <p>Hoặc đăng nhập với</p>
-                        <button type="button" class="google-login">
-                            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
-                            Đăng nhập với Google
-                        </button>
-                    </div>
-                </form>
-                <div class="modal-footer">
-                    <p>Chưa có tài khoản? <a href="#" class="switch-modal" data-target="registerModal">Đăng ký ngay</a>
-                    </p>
-                    <p style="margin-top: 10px;">Trở thành nhân viên giao hàng? <a href="register-shipper.html"
-                            style="color: #FF6B00; font-weight: bold; text-decoration: none;">Đăng ký ngay</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="registerModal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-header">
-                <h2>Đăng ký tài khoản</h2>
-            </div>
-            <div class="modal-body">
-                <form id="registerForm">
-                    <div class="form-group">
-                        <label for="registerName">Họ và tên</label>
-                        <input type="text" id="registerName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="registerEmail">Email</label>
-                        <input type="email" id="registerEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="registerPhone">Số điện thoại</label>
-                        <input type="tel" id="registerPhone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="registerPassword">Mật khẩu</label>
-                        <input type="password" id="registerPassword" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword">Xác nhận mật khẩu</label>
-                        <input type="password" id="confirmPassword" required>
-                    </div>
-                    <div class="form-options">
-                        <label>
-                            <input type="checkbox" required> Tôi đồng ý với <a href="#">điều khoản sử dụng</a>
-                        </label>
-                    </div>
-                    <button type="submit" class="submit-button">Đăng ký</button>
-                </form>
-                <div class="modal-footer">
-                    <p>Đã có tài khoản? <a href="#" class="switch-modal" data-target="loginModal">Đăng nhập</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="forgotPasswordModal">
-        <div class="modal-content">
-            <span class="close-modal">&times;</span>
-            <div class="modal-header">
-                <h2>Quên mật khẩu</h2>
-            </div>
-            <div class="modal-body">
-                <form id="forgotPasswordForm">
-                    <div class="form-group">
-                        <label for="forgotEmail">Email</label>
-                        <input type="email" id="forgotEmail" required>
-                    </div>
-                    <button type="submit" class="submit-button">Gửi link đặt lại mật khẩu</button>
-                </form>
-                <div class="modal-footer">
-                    <p>Đã nhớ mật khẩu? <a href="#" class="switch-modal" data-target="loginModal">Đăng nhập</a></p>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDPdSUkT56drPQGE9N4KvjM3ZoQaeamdao",
-            authDomain: "lavawhey.firebaseapp.com",
-            projectId: "lavawhey",
-            storageBucket: "lavawhey.firebasestorage.app",
-            messagingSenderId: "261576736130",
-            appId: "1:261576736130:web:9d8b878a50e01c9591a39b",
-            measurementId: "G-BR9VJHPJGL"
-        };
+        // Tab switching logic
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        firebase.analytics();
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
 
-        // Get auth instance
-        const auth = firebase.auth();
-
-        // Google Sign-in Provider
-        const googleProvider = new firebase.auth.GoogleAuthProvider();
-        googleProvider.setCustomParameters({
-            prompt: 'select_account'
-        });
-
-        // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                if (targetId === '#') return; // Skip if href is just "#"
-                const targetElement = document.querySelector(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth'
-                    });
-                }
+                btn.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
             });
         });
 
-        // Smooth scrolling for cross-page links
-        document.querySelectorAll('a[href*="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (href.includes('#')) {
-                    const [page, targetId] = href.split('#');
-                    if (page === window.location.pathname.split('/').pop() || page === '') {
-                        e.preventDefault();
-                        const targetElement = document.querySelector('#' + targetId);
-                        if (targetElement) {
-                            targetElement.scrollIntoView({
-                                behavior: 'smooth'
-                            });
-                        }
-                    }
-                }
-            });
-        });
+        // BMI Calculation
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('bmi-height').value) / 100;
+            const weight = parseFloat(document.getElementById('bmi-weight').value);
 
-        // Add to cart functionality
-        document.querySelectorAll('.buy-button').forEach(button => {
-            button.addEventListener('click', function () {
-                const product = this.parentElement;
-                const productName = product.querySelector('h3').textContent;
-                alert(`Đã thêm ${productName} vào giỏ hàng!`);
-            });
-        });
-
-        // Modal Functionality
-        document.addEventListener('DOMContentLoaded', function () {
-            // Use global auth manager (same behavior across pages)
-            if (window.__lavawheyAuthGlobal) return;
-            // Get modal elements
-            const loginModal = document.getElementById('loginModal');
-            const registerModal = document.getElementById('registerModal');
-            const forgotPasswordModal = document.getElementById('forgotPasswordModal');
-            const loginButton = document.querySelector('.btn-login');
-            const closeButtons = document.querySelectorAll('.close-modal');
-            const switchModalLinks = document.querySelectorAll('.switch-modal');
-            const forgotPasswordLink = document.querySelector('.forgot-password');
-
-            // Show login modal when clicking login button
-            loginButton.addEventListener('click', function (e) {
-                e.preventDefault();
-                showModal(loginModal);
-            });
-
-            // Close modal when clicking close button
-            closeButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    const modal = this.closest('.modal');
-                    hideModal(modal);
-                });
-            });
-
-            // Close modal when clicking outside
-            window.addEventListener('click', function (e) {
-                if (e.target.classList.contains('modal')) {
-                    hideModal(e.target);
-                }
-            });
-
-            // Switch between modals
-            switchModalLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const currentModal = this.closest('.modal');
-                    const targetModalId = this.getAttribute('data-target');
-                    const targetModal = document.getElementById(targetModalId);
-
-                    hideModal(currentModal);
-                    showModal(targetModal);
-                });
-            });
-
-            // Show forgot password modal
-            forgotPasswordLink.addEventListener('click', function (e) {
-                e.preventDefault();
-                hideModal(loginModal);
-                showModal(forgotPasswordModal);
-            });
-
-            // Helper functions
-            function showModal(modal) {
-                modal.classList.add('show');
-                document.body.style.overflow = 'hidden';
+            if (!height || !weight) {
+                Swal.fire('Lỗi', 'Vui lòng nhập đầy đủ chiều cao và cân nặng', 'error');
+                return;
             }
 
-            function hideModal(modal) {
-                modal.classList.remove('show');
-                document.body.style.overflow = '';
+            const bmi = (weight / (height * height)).toFixed(1);
+            document.getElementById('bmi-value').textContent = bmi;
+
+            let status = '';
+            let statusClass = '';
+
+            if (bmi < 18.5) {
+                status = 'Thiếu cân';
+                statusClass = 'status-underweight';
+            } else if (bmi >= 18.5 && bmi <= 24.9) {
+                status = 'Bình thường';
+                statusClass = 'status-normal';
+            } else if (bmi >= 25 && bmi <= 29.9) {
+                status = 'Thừa cân';
+                statusClass = 'status-overweight';
+            } else {
+                status = 'Béo phì';
+                statusClass = 'status-obese';
             }
 
-            function showSuccessMessage(message) {
-                Swal.fire({
-                    title: 'Thành công!',
-                    text: message,
-                    icon: 'success',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#FF6B00',
-                    timer: 2000,
-                    timerProgressBar: true
-                });
+            const statusEl = document.getElementById('bmi-status');
+            statusEl.textContent = status;
+            statusEl.className = 'result-status ' + statusClass;
+
+            const resultCard = document.getElementById('bmi-result-card');
+            resultCard.classList.add('active');
+
+            // Scroll to result on mobile
+            if (window.innerWidth < 850) {
+                resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        // TDEE Calculation
+        function calculateTDEE() {
+            const gender = document.querySelector('input[name="gender"]:checked').value;
+            const age = parseInt(document.getElementById('tdee-age').value);
+            const height = parseFloat(document.getElementById('tdee-height').value);
+            const weight = parseFloat(document.getElementById('tdee-weight').value);
+            const activity = parseFloat(document.getElementById('activity').value);
+
+            if (!age || !height || !weight) {
+                Swal.fire('Lỗi', 'Vui lòng nhập đầy đủ thông tin', 'error');
+                return;
             }
 
-            function showErrorMessage(message) {
-                Swal.fire({
-                    title: 'Lỗi!',
-                    text: message,
-                    icon: 'error',
-                    confirmButtonText: 'OK',
-                    confirmButtonColor: '#FF6B00'
-                });
+            let bmr = 0;
+            if (gender === 'male') {
+                bmr = 10 * weight + 6.25 * height - 5 * age + 5;
+            } else {
+                bmr = 10 * weight + 6.25 * height - 5 * age - 161;
             }
 
-            function showLoadingMessage(message) {
-                Swal.fire({
-                    title: 'Đang xử lý...',
-                    text: message,
-                    allowOutsideClick: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    }
-                });
+            const tdee = Math.round(bmr * activity);
+            document.getElementById('tdee-value').textContent = tdee.toLocaleString('vi-VN');
+
+            document.getElementById('tdee-maintain').textContent = tdee.toLocaleString('vi-VN') + ' kcal';
+            document.getElementById('tdee-lose').textContent = Math.round(tdee - 500).toLocaleString('vi-VN') + ' kcal';
+            document.getElementById('tdee-gain').textContent = Math.round(tdee + 500).toLocaleString('vi-VN') + ' kcal';
+
+            document.getElementById('tdee-breakdown').style.display = 'flex';
+            const resultCard = document.getElementById('tdee-result-card');
+            resultCard.classList.add('active');
+
+            // Scroll to result on mobile
+            if (window.innerWidth < 850) {
+                resultCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
+        }
 
-
-
-            // Handle direct access to anchor links
-            if (window.location.hash) {
-                const targetElement = document.querySelector(window.location.hash);
-                if (targetElement) {
-                    setTimeout(() => {
-                        targetElement.scrollIntoView({
-                            behavior: 'smooth'
-                        });
-                    }, 100);
-                }
-            }
-        });
-
-        // Cart được xử lý bởi js/cart-shared.js
-
-        // Gửi form liên hệ lên Firebase
-        document.addEventListener('DOMContentLoaded', function () {
-            const contactForm = document.querySelector('.contact-form form');
-            if (contactForm) {
-                contactForm.addEventListener('submit', async function (e) {
-                    e.preventDefault();
-                    const name = document.getElementById('name').value.trim();
-                    const email = document.getElementById('email').value.trim();
-                    const phone = document.getElementById('phone').value.trim();
-                    const message = document.getElementById('message').value.trim();
-
-                    if (!name || !email || !phone || !message) {
-                        Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Vui lòng điền đầy đủ thông tin!',
-                            icon: 'error',
-                            confirmButtonColor: '#FF6B00'
-                        });
-                        return;
-                    }
-
-                    try {
-                        const database = firebase.database();
-                        const newContactRef = database.ref('contacts').push();
-                        await newContactRef.set({
-                            name,
-                            email,
-                            phone,
-                            message,
-                            createdAt: new Date().toISOString()
-                        });
-                        Swal.fire({
-                            title: 'Thành công!',
-                            text: 'Tin nhắn của bạn đã được gửi. Chúng tôi sẽ liên hệ lại sớm nhất!',
-                            icon: 'success',
-                            confirmButtonColor: '#FF6B00',
-                            timer: 2500
-                        });
-                        contactForm.reset();
-                    } catch (error) {
-                        Swal.fire({
-                            title: 'Lỗi!',
-                            text: 'Gửi tin nhắn thất bại: ' + error.message,
-                            icon: 'error',
-                            confirmButtonColor: '#FF6B00'
-                        });
-                    }
-                });
-            }
-        });
     </script>
-    <script src="js/cart-shared.js"></script>
-    <!-- AI Chatbox -->
-    <script src="https://app.tudongchat.com/js/chatbox.js"></script>
-    <script>
-        const tudong_chatbox = new TuDongChat('BDl_m-Sqx6soMj1WB_jrh')
-        tudong_chatbox.initial()
-    </script>
+    <script src="../js/cart-shared.js"></script>
+    <script src="../js/search_new.js"></script>
 </body>
 
 </html>

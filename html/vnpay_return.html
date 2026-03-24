@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="mobile.js"></script>
-    <script src="js/stock-sync.js"></script>
-    <link rel="stylesheet" href="mobile.css">
+    <script src="../js/mobile.js"></script>
+    <script src="../js/stock-sync.js"></script>
+    <link rel="stylesheet" href="../css/mobile.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -181,7 +182,17 @@
             return params;
         }
 
+        async function initAuth() {
+            return new Promise((resolve) => {
+                const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+                    unsubscribe();
+                    resolve(user);
+                });
+            });
+        }
+
         async function handleVNPayReturn() {
+            await initAuth();
             const params = getQueryParams();
             const txnRef = params['vnp_TxnRef'];
             const responseCode = params['vnp_ResponseCode'];
@@ -221,6 +232,7 @@
             }
 
             if (responseCode === '00') {
+                // Cập nhật trạng thái đơn hàng
                 await firebase.database().ref('orders/' + orderKey).update({
                     status: 'paid',
                     paymentStatus: 'success',
@@ -252,9 +264,23 @@
                     finalAmount: order.finalAmount || (Number(vnp_Amount) / 100)
                 });
 
-                // Deduct stock for successful VNPay order
-                if (order.items && order.items.length > 0) {
-                    await deductStock(order.items);
+                // Trừ tồn kho - chỉ thực hiện 1 lần duy nhất (tránh reload trừ nhiều lần)
+                let itemsList = [];
+                if (Array.isArray(order.items)) {
+                    itemsList = order.items;
+                } else if (order.items && typeof order.items === 'object') {
+                    itemsList = Object.values(order.items);
+                }
+
+                if (itemsList.length > 0 && !order.stockDeducted) {
+                    await deductStock(itemsList);
+                    // Đánh dấu đã trừ kho để tránh trừ lại khi tải lại trang
+                    await firebase.database().ref('orders/' + orderKey).update({
+                        stockDeducted: true
+                    });
+                    console.log('Stock deducted for order:', orderKey);
+                } else if (order.stockDeducted) {
+                    console.log('Stock already deducted for order:', orderKey, '- skipping.');
                 }
 
                 localStorage.removeItem('cart_main');
