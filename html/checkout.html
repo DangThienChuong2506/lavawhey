@@ -484,29 +484,7 @@
             transform: translateY(-2px);
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.4);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            background: #fff;
-            border-radius: 10px;
-            padding: 30px;
-            position: relative;
-        }
+        /* Modal styles are handled globally by modals.css */
     </style>
     <script src="../js/auth-global.js"></script>
     <script src="../js/marquee.js" charset="UTF-8"></script>
@@ -738,19 +716,7 @@
     </div>
 
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyDPdSUkT56drPQGE9N4KvjM3ZoQaeamdao",
-            authDomain: "lavawhey.firebaseapp.com",
-            projectId: "lavawhey",
-            storageBucket: "lavawhey.firebasestorage.app",
-            messagingSenderId: "261576736130",
-            appId: "1:261576736130:web:9d8b878a50e01c9591a39b",
-            measurementId: "G-BR9VJHPJGL"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        // Firebase is already initialized by auth-global.js
 
         // Đặt các hàm này ở phạm vi toàn cục, trước DOMContentLoaded
         // Dùng chung 1 key với toàn bộ website (được định nghĩa trong js/cart-shared.js)
