@@ -287,6 +287,11 @@ function getSafeImage(url) {
                             lastLogin: new Date().toISOString(),
                             provider: 'google'
                         });
+                        // Restore button state before closing modal
+                        btn.disabled = false;
+                        btn.style.opacity = '';
+                        btn.style.cursor = '';
+                        btn.innerHTML = originalHTML;
                         hideModal(document.getElementById('loginModal'));
                         showSuccess('Đăng nhập thành công!');
                     }
