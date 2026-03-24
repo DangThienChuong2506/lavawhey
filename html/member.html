@@ -5502,13 +5502,23 @@
 
                     if (!result.isConfirmed) return;
 
-                    await database.ref('invoices/' + invoiceId).update({
+                    const cancelData = {
                         status: 'cancelled',
                         cancelledAt: Date.now(),
                         cancelledBy: currentUser.uid,
                         cancelReason: result.value.reason,
                         cancelNote: result.value.otherReason || ''
-                    });
+                    };
+
+                    await database.ref('invoices/' + invoiceId).update(cancelData);
+
+                    // Sync cancelled status to 'orders' collection so shipper cannot accept it
+                    if (order.orderKey) {
+                        await database.ref('orders/' + order.orderKey).update({
+                            status: 'cancelled',
+                            cancelledAt: Date.now()
+                        });
+                    }
 
                     showSuccess('Đã hủy đơn hàng!');
                     loadOrders();
