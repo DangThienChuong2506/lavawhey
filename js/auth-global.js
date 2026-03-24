@@ -248,14 +248,32 @@ function getSafeImage(url) {
         const googleBtns = document.querySelectorAll('.google-login');
         googleBtns.forEach(btn => {
             btn.addEventListener('click', async () => {
-                // Disable button instead of Swal spinner (Swal async causes spinner to hang)
                 const originalHTML = btn.innerHTML;
                 btn.disabled = true;
                 btn.style.opacity = '0.7';
                 btn.style.cursor = 'not-allowed';
 
+                let loginSucceeded = false;
+
+                // Detect popup closed instantly via window focus event
+                const handleWindowFocus = () => {
+                    setTimeout(() => {
+                        if (!loginSucceeded) {
+                            btn.disabled = false;
+                            btn.style.opacity = '';
+                            btn.style.cursor = '';
+                            btn.innerHTML = originalHTML;
+                            Swal.fire({ icon: 'info', title: 'Đã hủy đăng nhập', timer: 1500, showConfirmButton: false });
+                        }
+                    }, 300); // small buffer to let Firebase resolve if login succeeded
+                };
+                window.addEventListener('focus', handleWindowFocus, { once: true });
+
                 try {
                     const res = await auth.signInWithPopup(googleProvider);
+                    loginSucceeded = true;
+                    window.removeEventListener('focus', handleWindowFocus);
+
                     if (res.user) {
                         if (res.user.email === 'quantrilavawhey@gmail.com') {
                             await auth.signOut();
@@ -273,15 +291,15 @@ function getSafeImage(url) {
                         showSuccess('Đăng nhập thành công!');
                     }
                 } catch (err) {
+                    window.removeEventListener('focus', handleWindowFocus);
                     // Restore button state
                     btn.disabled = false;
                     btn.style.opacity = '';
                     btn.style.cursor = '';
                     btn.innerHTML = originalHTML;
 
-                    // User cancelled the popup - show info, not error
+                    // popup-closed is already handled by focus event above, skip
                     if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
-                        Swal.fire({ icon: 'info', title: 'Đã hủy đăng nhập', timer: 1500, showConfirmButton: false });
                         return;
                     }
                     console.error('Lỗi Google login:', err);
