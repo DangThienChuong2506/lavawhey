@@ -248,10 +248,14 @@ function getSafeImage(url) {
         const googleBtns = document.querySelectorAll('.google-login');
         googleBtns.forEach(btn => {
             btn.addEventListener('click', async () => {
-                showLoading('Đang chuyển hướng đến Google...');
+                // Disable button instead of Swal spinner (Swal async causes spinner to hang)
+                const originalHTML = btn.innerHTML;
+                btn.disabled = true;
+                btn.style.opacity = '0.7';
+                btn.style.cursor = 'not-allowed';
+
                 try {
                     const res = await auth.signInWithPopup(googleProvider);
-                    Swal.close();
                     if (res.user) {
                         if (res.user.email === 'quantrilavawhey@gmail.com') {
                             await auth.signOut();
@@ -269,10 +273,15 @@ function getSafeImage(url) {
                         showSuccess('Đăng nhập thành công!');
                     }
                 } catch (err) {
-                    // Always close the loading spinner first
-                    Swal.close();
-                    // User closed the popup - this is normal behavior, not an error
+                    // Restore button state
+                    btn.disabled = false;
+                    btn.style.opacity = '';
+                    btn.style.cursor = '';
+                    btn.innerHTML = originalHTML;
+
+                    // User cancelled the popup - show info, not error
                     if (err.code === 'auth/popup-closed-by-user' || err.code === 'auth/cancelled-popup-request') {
+                        Swal.fire({ icon: 'info', title: 'Đã hủy đăng nhập', timer: 1500, showConfirmButton: false });
                         return;
                     }
                     console.error('Lỗi Google login:', err);
@@ -280,6 +289,7 @@ function getSafeImage(url) {
                 }
             });
         });
+
 
         const forgotForm = document.getElementById('forgotPasswordForm');
         if (forgotForm) {
